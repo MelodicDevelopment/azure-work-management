@@ -1,26 +1,39 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { BoardsSideBarProvider } from './apps/boards/boards-sidebar.provider';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "azure-work-management" is now active!');
+	const config = vscode.workspace.getConfiguration('azure-work-management');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('azure-work-management.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Azure Work Management!');
-	});
+	const boardsSideBarProvider: BoardsSideBarProvider = new BoardsSideBarProvider(context.extensionUri);
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(
+		vscode.commands.registerCommand('azure-work-management.helloWorld', () => {
+			vscode.window.showInformationMessage('Coming Soon');
+
+			console.log(config);
+		}),
+
+		vscode.window.registerWebviewViewProvider('azure-work-management:boards', boardsSideBarProvider)
+	);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {}
+
+// Azure DevOps Test PAT
+// dv7htpnhrw4ekigk3kgvip44b7dbmgfhghac3jhwu7yb5yxufpta
+// rhopkins@nhaschools.com:dv7htpnhrw4ekigk3kgvip44b7dbmgfhghac3jhwu7yb5yxufpta
+// base64 = cmhvcGtpbnNAbmhhc2Nob29scy5jb206ZHY3aHRwbmhydzRla2lnazNrZ3ZpcDQ0YjdkYm1nZmhnaGFjM2pod3U3eWI1eXh1ZnB0YQ==
+
+// async function getBoards() {
+// 	const response = await fetch('https://dev.azure.com/nhaschools/School Apps/Teacher Support/_apis/work/boards?api-version=6.0', {
+// 		headers: {
+// 			'Accept': '*/*',
+// 			'User-Agent': 'Thunder Client (https://www.thunderclient.io)',
+// 			'Authorization': 'Basic cmhvcGtpbnNAbmhhc2Nob29scy5jb206ZHY3aHRwbmhydzRla2lnazNrZ3ZpcDQ0YjdkYm1nZmhnaGFjM2pod3U3eWI1eXh1ZnB0YQ=='
+// 		}
+// 	});
+
+// 	const data = await response.json();
+
+// 	console.log(data);
+// }

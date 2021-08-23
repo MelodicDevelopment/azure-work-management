@@ -10,10 +10,63 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:azure-work-management.helloWorld"
+		"onCommand:azure-work-management.helloWorld",
+		"onView:azure-work-management:boards"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
+		"configuration": [
+			{
+				"title": "Azure Work Management",
+				"properties": {
+					"azure-work-management.organization": {
+						"type": "string",
+						"default": null,
+						"description": "The Azure organization."
+					},
+					"azure-work-management.project": {
+						"type": "string",
+						"default": null,
+						"description": "The Azure organization project."
+					},
+					"azure-work-management.team": {
+						"type": "string",
+						"default": null,
+						"description": "The Azure organization project team."
+					},
+					"azure-work-management.username": {
+						"type": "string",
+						"default": null,
+						"description": "The Azure username for authentication."
+					},
+					"azure-work-management.personal-access-token": {
+						"type": "string",
+						"default": null,
+						"description": "The Azure personal access token."
+					}
+				}
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "azure-work-management-boards",
+					"title": "Azure Work Management",
+					"icon": "src/resources/task_alt_black_24dp.svg"
+				}
+			]
+		},
+		"views": {
+			"azure-work-management-boards": [
+				{
+					"id": "azure-work-management:boards",
+					"name": "Boards",
+					"type": "webview",
+					"contextualTitle": "Azure Work Management: Boards",
+					"icon": "src/resources/task_alt_black_24dp.svg"
+				}
+			]
+		},
 		"commands": [
 			{
 				"command": "azure-work-management.helloWorld",
