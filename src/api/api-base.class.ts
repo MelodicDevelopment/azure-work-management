@@ -1,20 +1,10 @@
 import * as vscode from 'vscode';
-import axios from 'axios';
+import axios, { AxiosStatic } from 'axios';
 import { MultValueResponse } from './types/multi-value-response.type';
 
+// TODO: Remove this
 // Azure DevOps Test PAT
 // dv7htpnhrw4ekigk3kgvip44b7dbmgfhghac3jhwu7yb5yxufpta
-// rhopkins@nhaschools.com:dv7htpnhrw4ekigk3kgvip44b7dbmgfhghac3jhwu7yb5yxufpta
-// base64 = cmhvcGtpbnNAbmhhc2Nob29scy5jb206ZHY3aHRwbmhydzRla2lnazNrZ3ZpcDQ0YjdkYm1nZmhnaGFjM2pod3U3eWI1eXh1ZnB0YQ==
-
-// config
-// {
-// 	organization: "nhaschools"
-// 	personal-access-token: "dv7htpnhrw4ekigk3kgvip44b7dbmgfhghac3jhwu7yb5yxufpta"
-// 	project: "School Apps"
-// 	team: "Teacher Support"
-// 	username: "rhopkins@nhaschools.com"
-// }
 
 const appSettings: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('azure-work-management');
 
@@ -52,12 +42,14 @@ Stack: ${error.stack}`
 	}
 );
 
-export class ApiBase {
+export class ApiBase<T> {
 	private _apiVersion: string = '?api-version=6.0';
 	private _baseUrl: string = 'https://dev.azure.com/';
 	private _organizationName: string = appSettings.get('organization') as string;
 	private _projectName: string = appSettings.get('project') as string;
 	private _teamName: string = appSettings.get('team') as string;
+
+	protected axios: AxiosStatic = axios;
 
 	constructor(protected endPoint: string) {}
 
@@ -81,14 +73,14 @@ export class ApiBase {
 		return this._apiVersion;
 	}
 
-	get<T>(id: string): Promise<T> {
-		return axios.get(`${this._baseUrl}/${this._organizationName}/${this._projectName}/${this._teamName}/_apis/${this.endPoint}/${id}${this._apiVersion}`).then((response) => {
+	get(id: string): Promise<T> {
+		return axios.get(`${this._baseUrl}/${this._organizationName}/${this._projectName}/${this._teamName}/${this.endPoint}/${id}${this._apiVersion}`).then((response) => {
 			return response.data;
 		});
 	}
 
-	getAll<T>(): Promise<T[]> {
-		return axios.get(`${this._baseUrl}/${this._organizationName}/${this._projectName}/${this._teamName}/_apis/${this.endPoint}${this._apiVersion}`).then((response) => {
+	getAll(): Promise<T[]> {
+		return axios.get(`${this._baseUrl}/${this._organizationName}/${this._projectName}/${this._teamName}/${this.endPoint}${this._apiVersion}`).then((response) => {
 			return (response.data as MultValueResponse<T>).value;
 		});
 	}

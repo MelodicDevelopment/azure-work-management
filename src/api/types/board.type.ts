@@ -1,9 +1,9 @@
-import { BoardColumn } from './board-column.type';
+import { Column } from './column.type';
 
 export type Board = {
 	id: string;
 	url: string;
 	name: string;
-	columns: BoardColumn[];
+	columns: Column[];
 	canEdit: boolean;
 };

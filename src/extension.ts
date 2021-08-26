@@ -1,16 +1,9 @@
 import * as vscode from 'vscode';
-import { BoardsSideBarProvider } from './apps/boards/OLD-boards-sidebar.provider';
+import { BoardTreeProvider } from './apps/boards/board-tree.provider';
 
 export function activate(context: vscode.ExtensionContext) {
-	//const boardsSideBarProvider: BoardsSideBarProvider = new BoardsSideBarProvider(context.extensionUri);
+	const boardTreeProvider: BoardTreeProvider = new BoardTreeProvider();
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand('azure-work-management.helloWorld', () => {
-			vscode.window.showInformationMessage('Coming Soon');
-		})
-
-		//vscode.window.registerWebviewViewProvider('azure-work-management:boards', boardsSideBarProvider)
-	);
+	vscode.window.registerTreeDataProvider('azure-work-management:boards', boardTreeProvider);
+	vscode.commands.registerCommand('azure-work-management:boards.refreshBoards', () => boardTreeProvider.refresh());
 }
-
-export function deactivate() {}

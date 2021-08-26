@@ -1,15 +1,17 @@
 import { ApiBase } from '../api-base.class';
+import { Board, Column } from '../types';
+import { MultValueResponse } from '../types/multi-value-response.type';
 
-export class BoardService extends ApiBase {
+export class BoardService extends ApiBase<Board> {
 	constructor() {
-		super('work/boards');
+		super('_apis/work/boards');
 	}
 
-	get<Board>(id: string): Promise<Board> {
-		return super.get<Board>(id);
-	}
-
-	getAll<Board>(): Promise<Board[]> {
-		return super.getAll();
+	getColumns(boardID: string): Promise<Column[]> {
+		return this.axios
+			.get(`${this.getBaseUrl()}/${this.getOrganizationName()}/${this.getProjectName()}/${this.getTeamName()}/${this.endPoint}/${boardID}/columns${this.getApiVersion()}`)
+			.then((response) => {
+				return (response.data as MultValueResponse<Column>).value;
+			});
 	}
 }

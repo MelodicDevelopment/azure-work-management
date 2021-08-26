@@ -61,7 +61,6 @@
 				{
 					"id": "azure-work-management:boards",
 					"name": "Boards",
-					"type": "webview",
 					"contextualTitle": "Azure Work Management: Boards",
 					"icon": "src/resources/task_alt_black_24dp.svg"
 				}
@@ -71,8 +70,25 @@
 			{
 				"command": "azure-work-management.helloWorld",
 				"title": "Hello World"
+			},
+			{
+				"command": "azure-work-management:boards.refreshBoards",
+				"title": "Refresh",
+				"icon": {
+					"light": "src/resources/light/refresh.svg",
+					"dark": "src/resources/dark/refresh.svg"
+				}
 			}
-		]
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "azure-work-management:boards.refreshBoards",
+					"when": "view == azure-work-management:boards",
+					"group": "navigation"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
