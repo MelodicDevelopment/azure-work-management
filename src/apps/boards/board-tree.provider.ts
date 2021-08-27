@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
-import { Board, Column } from '../../api';
-import { BoardService } from '../../api/services';
+import { Board, Column, WorkItem } from '../../api';
+import { BoardService, WorkItemService } from '../../api/services';
 import { BoardItem } from './board-item.class';
 import { ColumnItem } from './column-item.class';
+import { WorkItemItem } from './work-item-item.class';
 
 export class BoardTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private _boardService: BoardService = new BoardService();
+	private _workItemService: WorkItemService = new WorkItemService();
 
 	private _onDidChangeTreeData: vscode.EventEmitter<BoardItem | undefined | void> = new vscode.EventEmitter<BoardItem | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<BoardItem | undefined | void> = this._onDidChangeTreeData.event;
@@ -47,6 +49,10 @@ export class BoardTreeProvider implements vscode.TreeDataProvider<vscode.TreeIte
 	}
 
 	private getWorkItems(element: ColumnItem): Promise<vscode.TreeItem[]> {
-		return Promise.resolve([]);
+		return this._workItemService.queryForWorkItems().then((workItems: WorkItem[]) => {
+			return workItems.map((workItem) => {
+				return new WorkItemItem(workItem, vscode.TreeItemCollapsibleState.Collapsed);
+			});
+		});
 	}
 }
