@@ -13,7 +13,7 @@ export class WorkItemService extends ApiBase<WorkItem> {
 
 	queryForWorkItems(): Promise<WorkItem[]> {
 		const data: { query: string } = {
-			query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = 'School Apps\\2021\\PI 5.4 (8.25-9.7 - PD 9.16)' AND ([System.AreaPath] = 'School Apps\\Teacher Support' OR [System.AreaPath] = 'School Apps\\Smooth Principals') AND [System.BoardColumn] = 'New' ORDER BY [State] Asc`
+			query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = 'School Apps\\2021\\PI 5.4 (8.25-9.7 - PD 9.16)' AND ([System.AreaPath] = 'School Apps\\Teacher Support' OR [System.AreaPath] = 'School Apps\\Teacher Support') AND [System.BoardColumn] = 'New' ORDER BY [State] Asc`
 		};
 
 		return this.axios
