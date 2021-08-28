@@ -52,7 +52,7 @@
 				{
 					"id": "azure-work-management-boards",
 					"title": "Azure Work Management",
-					"icon": "src/resources/task_alt_black_24dp.svg"
+					"icon": "src/resources/azure-devops.svg"
 				}
 			]
 		},
@@ -62,7 +62,7 @@
 					"id": "azure-work-management:boards",
 					"name": "Boards",
 					"contextualTitle": "Azure Work Management: Boards",
-					"icon": "src/resources/task_alt_black_24dp.svg"
+					"icon": "src/resources/azure-devops.svg"
 				}
 			]
 		},

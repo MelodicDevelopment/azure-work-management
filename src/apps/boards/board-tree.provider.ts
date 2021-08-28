@@ -12,6 +12,8 @@ export class BoardTreeProvider implements vscode.TreeDataProvider<vscode.TreeIte
 	private _onDidChangeTreeData: vscode.EventEmitter<BoardItem | undefined | void> = new vscode.EventEmitter<BoardItem | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<BoardItem | undefined | void> = this._onDidChangeTreeData.event;
 
+	constructor(private _globalstate: vscode.Memento) {}
+
 	refresh(): void {
 		this._onDidChangeTreeData.fire();
 	}
@@ -49,7 +51,11 @@ export class BoardTreeProvider implements vscode.TreeDataProvider<vscode.TreeIte
 	}
 
 	private getWorkItems(element: ColumnItem): Promise<vscode.TreeItem[]> {
-		return this._workItemService.queryForWorkItems().then((workItems: WorkItem[]) => {
+		const currentIterationPath: string = this._globalstate.get('current-iteration-path') as string;
+		const systemAreaPath: string = (JSON.parse(this._globalstate.get('system-area-path') as string) as string[])[0];
+		const boardColumn: string = element.getColumnName();
+
+		return this._workItemService.queryForWorkItems(currentIterationPath, systemAreaPath, boardColumn).then((workItems: WorkItem[]) => {
 			return workItems.map((workItem) => {
 				return new WorkItemItem(workItem, vscode.TreeItemCollapsibleState.Collapsed);
 			});

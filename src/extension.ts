@@ -24,7 +24,7 @@ const setSystemAreaPaths = (globalstate: vscode.Memento): Promise<void> => {
 
 export function activate(context: vscode.ExtensionContext) {
 	initialize(context.globalState).then(() => {
-		const boardTreeProvider: BoardTreeProvider = new BoardTreeProvider();
+		const boardTreeProvider: BoardTreeProvider = new BoardTreeProvider(context.globalState);
 
 		vscode.window.registerTreeDataProvider('azure-work-management:boards', boardTreeProvider);
 		vscode.commands.registerCommand('azure-work-management:boards.refreshBoards', () => boardTreeProvider.refresh());
