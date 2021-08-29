@@ -18,7 +18,7 @@ export class WorkItemItem extends vscode.TreeItem {
 		super(_workItem.fields['System.Title'], collapsibleState);
 	}
 
-	getWorkItemID(): string {
+	getWorkItemID(): number {
 		return this._workItem.id;
 	}
 }

@@ -24,16 +24,6 @@
 						"default": null,
 						"description": "The Azure organization."
 					},
-					"azure-work-management.project": {
-						"type": "string",
-						"default": null,
-						"description": "The Azure organization project."
-					},
-					"azure-work-management.team": {
-						"type": "string",
-						"default": null,
-						"description": "The Azure organization project team."
-					},
 					"azure-work-management.personal-access-token": {
 						"type": "string",
 						"default": null,

@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import axios, { AxiosStatic } from 'axios';
-import { MultValueResponse } from './types/multi-value-response.type';
 
 // TODO: Remove this
 // Azure DevOps Test PAT
@@ -42,46 +41,11 @@ Stack: ${error.stack}`
 	}
 );
 
-export class ApiBase<T> {
-	private _apiVersion: string = '?api-version=6.0';
-	private _baseUrl: string = 'https://dev.azure.com/';
-	private _organizationName: string = appSettings.get('organization') as string;
-	private _projectName: string = appSettings.get('project') as string;
-	private _teamName: string = appSettings.get('team') as string;
-
+export class ApiBase {
 	protected axios: AxiosStatic = axios;
+	protected apiVersion: string = 'api-version=6.0';
+	protected baseUrl: string = 'https://dev.azure.com/';
+	protected organizationName: string = appSettings.get('organization') as string;
 
 	constructor(protected endPoint: string) {}
-
-	getBaseUrl(): string {
-		return this._baseUrl;
-	}
-
-	getOrganizationName(): string {
-		return this._organizationName;
-	}
-
-	getProjectName(): string {
-		return this._projectName;
-	}
-
-	getTeamName(): string {
-		return this._teamName;
-	}
-
-	getApiVersion(): string {
-		return this._apiVersion;
-	}
-
-	get(id: string): Promise<T> {
-		return axios.get(`${this._baseUrl}/${this._organizationName}/${this._projectName}/${this._teamName}/${this.endPoint}/${id}${this._apiVersion}`).then((response) => {
-			return response.data;
-		});
-	}
-
-	getAll(): Promise<T[]> {
-		return axios.get(`${this._baseUrl}/${this._organizationName}/${this._projectName}/${this._teamName}/${this.endPoint}${this._apiVersion}`).then((response) => {
-			return (response.data as MultValueResponse<T>).value;
-		});
-	}
 }
