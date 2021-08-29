@@ -34,11 +34,6 @@
 						"default": null,
 						"description": "The Azure organization project team."
 					},
-					"azure-work-management.username": {
-						"type": "string",
-						"default": null,
-						"description": "The Azure username for authentication."
-					},
 					"azure-work-management.personal-access-token": {
 						"type": "string",
 						"default": null,

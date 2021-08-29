@@ -11,9 +11,11 @@ export class WorkItemService extends ApiBase<WorkItem> {
 		super('_apis/wit');
 	}
 
-	queryForWorkItems(iterationPath: string, areaPath: string, boardColumn: string): Promise<WorkItem[]> {
+	queryForWorkItems(iterationPath: string, areaPath: string[], boardColumn: string): Promise<WorkItem[]> {
+		const systemAreaPath: string = areaPath.map((ap) => `[System.AreaPath] = '${ap}'`).join(' OR ');
+
 		const data: { query: string } = {
-			query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = '${iterationPath}' AND [System.AreaPath] = '${areaPath}' AND [System.BoardColumn] = '${boardColumn}' ORDER BY [State] Asc`
+			query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = '${iterationPath}' AND (${systemAreaPath}) AND [System.BoardColumn] = '${boardColumn}' ORDER BY [State] Asc`
 		};
 
 		return this.axios

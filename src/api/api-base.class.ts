@@ -9,7 +9,7 @@ import { MultValueResponse } from './types/multi-value-response.type';
 const appSettings: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('azure-work-management');
 
 const getAuthorization = (): string => {
-	const buffer: Buffer = Buffer.from(`${appSettings.get('username')}:${appSettings.get('personal-access-token')}`);
+	const buffer: Buffer = Buffer.from(`:${appSettings.get('personal-access-token')}`);
 	return buffer.toString('base64');
 };
 
