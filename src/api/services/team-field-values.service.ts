@@ -1,10 +1,10 @@
 import { ApiBase } from '../api-base.class';
 import { TeamFieldValues } from '../types';
-import { appSettings } from '../../services';
+import { getAppSettings } from '../../services';
 
 export class TeamFieldValuesService extends ApiBase {
-	protected projectName: string = appSettings.get('project') as string;
-	protected teamName: string = appSettings.get('team') as string;
+	protected projectName: string = getAppSettings().get('project') as string;
+	protected teamName: string = getAppSettings().get('team') as string;
 
 	constructor() {
 		super('_apis/work/teamsettings/teamfieldvalues');

@@ -1,11 +1,11 @@
 import { ApiBase } from '../api-base.class';
 import { Board, Column } from '../types';
 import { MultValueResponse } from '../types/multi-value-response.type';
-import { appSettings } from '../../services';
+import { getAppSettings } from '../../services';
 
 export class BoardService extends ApiBase {
-	protected projectName: string = appSettings.get('project') as string;
-	protected teamName: string = appSettings.get('team') as string;
+	protected projectName: string = getAppSettings().get('project') as string;
+	protected teamName: string = getAppSettings().get('team') as string;
 
 	constructor() {
 		super('_apis/work/boards');
