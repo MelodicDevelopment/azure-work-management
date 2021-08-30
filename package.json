@@ -10,8 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:azure-work-management:openConfigPanel",
-		"onView:azure-work-management:boards"
+		"onCommand:azure-work-management.open-config-panel",
+		"onView:azure-work-management.open-boards"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -28,6 +28,16 @@
 						"type": "string",
 						"default": null,
 						"description": "The Azure personal access token."
+					},
+					"azure-work-management.project": {
+						"type": "string",
+						"default": null,
+						"description": "The Azure project."
+					},
+					"azure-work-management.team": {
+						"type": "string",
+						"default": null,
+						"description": "The Azure team."
 					}
 				}
 			}
@@ -44,20 +54,30 @@
 		"views": {
 			"azure-work-management-boards": [
 				{
-					"id": "azure-work-management:boards",
+					"id": "azure-work-management.open-boards",
 					"name": "Boards",
 					"contextualTitle": "Azure Work Management: Boards",
 					"icon": "src/resources/azure-devops.svg"
 				}
 			]
 		},
+		"viewsWelcome": [
+			{
+				"view": "azure-work-management.open-boards",
+				"contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)"
+			}
+		],
 		"commands": [
 			{
-				"command": "azure-work-management:openConfigPanel",
+				"command": "azure-work-management.open-config-settings",
+				"title": "Open Azure Work Management Configuration Settings"
+			},
+			{
+				"command": "azure-work-management.open-config-panel",
 				"title": "Open Azure Work Management Configuration"
 			},
 			{
-				"command": "azure-work-management:boards.refreshBoards",
+				"command": "azure-work-management.refresh-boards",
 				"title": "Refresh",
 				"icon": {
 					"light": "src/resources/light/refresh.svg",
@@ -68,8 +88,8 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "azure-work-management:boards.refreshBoards",
-					"when": "view == azure-work-management:boards",
+					"command": "azure-work-management.refresh-boards",
+					"when": "view == azure-work-management.open-boards",
 					"group": "navigation"
 				}
 			]

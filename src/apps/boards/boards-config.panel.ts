@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as vscode from 'vscode';
 
 export class BoardsConfigPanel {
@@ -5,7 +6,12 @@ export class BoardsConfigPanel {
 	public static readonly viewType = 'azure-work-management:boards-config-panel';
 
 	constructor(private _panel: vscode.WebviewPanel, private readonly _extensionUri: vscode.Uri) {
-		_panel.webview.html = this.getHtml();
+		const resourceRoot: string = _panel.webview.asWebviewUri(BoardsConfigPanel.createResourceRoot(_extensionUri)).toString();
+		_panel.webview.html = this.getHtml(resourceRoot);
+	}
+
+	public static createResourceRoot(extensionUri: vscode.Uri): vscode.Uri {
+		return vscode.Uri.file(path.join(extensionUri.path, 'src', 'apps', 'boards', 'boards-config-web'));
 	}
 
 	public static createOrShow(extensionUri: vscode.Uri) {
@@ -18,23 +24,25 @@ export class BoardsConfigPanel {
 
 		const panel = vscode.window.createWebviewPanel(BoardsConfigPanel.viewType, 'Azure Work Management Configuration', column || vscode.ViewColumn.One, {
 			enableScripts: true,
-			localResourceRoots: [extensionUri]
+			localResourceRoots: [BoardsConfigPanel.createResourceRoot(extensionUri)]
 		});
 
 		BoardsConfigPanel.currentPanel = new BoardsConfigPanel(panel, extensionUri);
 	}
 
-	private getHtml(): string {
-		return `
+	private getHtml(resourceRoot: string): string {
+		return /*html*/ `
 			<!DOCTYPE html>
 			<html lang="en">
 				<head>
 					<meta charset="utf-8" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
-					<title>Coming Soon</title>
 				</head>
 				<body>
-					<h1>Azure Work Management Config!</h1>
+					<form>
+						
+					</form>
+					<script type="text/javascript" src="${resourceRoot}/main.js"></script>
 				</body>
 			</html>
 		`;

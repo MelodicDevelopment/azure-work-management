@@ -4,15 +4,7 @@ import { BoardService, IterationService, TeamFieldValuesService, WorkItemService
 import { BoardItem } from './board-item.class';
 import { ColumnItem } from './column-item.class';
 import { WorkItemItem } from './work-item-item.class';
-import { getAppSettings } from '../../services';
-
-const getOrganizationName = (): string => {
-	return getAppSettings().get('organization') as string;
-};
-
-const getPersonalAccessToken = (): string => {
-	return getAppSettings().get('personal-access-token') as string;
-};
+import { getAppSettings, isValidAppSettings } from '../../services';
 
 const setCurrentIteration = (globalstate: vscode.Memento): Promise<void> => {
 	const iterationService: IterationService = new IterationService();
@@ -50,19 +42,19 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 	getChildren(element?: vscode.TreeItem): vscode.ProviderResult<vscode.TreeItem[]> {
 		return this.initialize().then(() => {
 			return new Promise(() => {
-				if (!getOrganizationName() || !getPersonalAccessToken()) {
-					return [];
+				if (isValidAppSettings()) {
+					const contextValueGetters: { [key: string]: () => Promise<vscode.TreeItem[]> } = {
+						default: this.getBoards.bind(this),
+						board: this.getColumns.bind(this, element as BoardItem),
+						column: this.getWorkItems.bind(this, element as ColumnItem),
+						workItem: () => Promise.resolve([])
+					};
+
+					const key: string = element?.contextValue || 'default';
+					return contextValueGetters[key]();
 				}
 
-				const contextValueGetters: { [key: string]: () => Promise<vscode.TreeItem[]> } = {
-					default: this.getBoards.bind(this),
-					board: this.getColumns.bind(this, element as BoardItem),
-					column: this.getWorkItems.bind(this, element as ColumnItem),
-					workItem: () => Promise.resolve([])
-				};
-
-				const key: string = element?.contextValue || 'default';
-				return contextValueGetters[key]();
+				return [];
 			});
 		});
 	}
@@ -77,8 +69,12 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 
 	private initialize(): Promise<void> {
 		return new Promise((resolve, _) => {
-			if (!getOrganizationName() || !getPersonalAccessToken()) {
-				vscode.commands.executeCommand('azure-work-management:openConfigPanel');
+			if (isValidAppSettings()) {
+				this.loadAdditionalSettings().then(() => {
+					resolve();
+				});
+			} else {
+				//vscode.commands.executeCommand('azure-work-management.open-config-panel');
 				resolve();
 
 				// vscode.window.showErrorMessage('Missing Extension Settings', 'Open Settings').then((response) => {
@@ -98,10 +94,6 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 				// 		});
 				// 	}
 				// }, 100);
-			} else {
-				return this.loadAdditionalSettings().then(() => {
-					resolve();
-				});
 			}
 		});
 	}
