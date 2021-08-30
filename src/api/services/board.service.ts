@@ -12,14 +12,14 @@ export class BoardService extends ApiBase {
 	}
 
 	getAll(): Promise<Board[]> {
-		return this.axios.get(`${this.baseUrl}/${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}?${this.apiVersion}`).then((response) => {
+		return this.axios.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}?${this.apiVersion}`).then((response) => {
 			return (response.data as MultValueResponse<Board>).value;
 		});
 	}
 
 	getColumns(boardID: string): Promise<Column[]> {
 		return this.axios
-			.get(`${this.baseUrl}/${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/${boardID}/columns?${this.apiVersion}`)
+			.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/${boardID}/columns?${this.apiVersion}`)
 			.then((response) => {
 				return (response.data as MultValueResponse<Column>).value;
 			});

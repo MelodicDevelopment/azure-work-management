@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:azure-work-management.helloWorld",
+		"onCommand:azure-work-management:openConfigPanel",
 		"onView:azure-work-management:boards"
 	],
 	"main": "./dist/extension.js",
@@ -53,8 +53,8 @@
 		},
 		"commands": [
 			{
-				"command": "azure-work-management.helloWorld",
-				"title": "Hello World"
+				"command": "azure-work-management:openConfigPanel",
+				"title": "Open Azure Work Management Configuration"
 			},
 			{
 				"command": "azure-work-management:boards.refreshBoards",
