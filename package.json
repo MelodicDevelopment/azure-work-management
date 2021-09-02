@@ -38,6 +38,11 @@
 						"type": "string",
 						"default": null,
 						"description": "The Azure team."
+					},
+					"azure-work-management.iteration": {
+						"type": "string",
+						"default": null,
+						"description": "The iteration you would like to display work items for. You can run the Set Iteration command to get values to populate this setting."
 					}
 				}
 			}
@@ -70,19 +75,15 @@
 		"commands": [
 			{
 				"command": "azure-work-management.open-config-settings",
-				"title": "Open Azure Work Management Configuration Settings",
+				"title": "Azure Work Management: Open Configuration Settings",
 				"icon": {
 					"light": "src/resources/light/settings.svg",
 					"dark": "src/resources/dark/settings.svg"
 				}
 			},
 			{
-				"command": "azure-work-management.open-config-panel",
-				"title": "Open Azure Work Management Configuration"
-			},
-			{
 				"command": "azure-work-management.refresh-boards",
-				"title": "Refresh Boards",
+				"title": "Azure Work Management: Refresh Boards",
 				"icon": {
 					"light": "src/resources/light/refresh.svg",
 					"dark": "src/resources/dark/refresh.svg"
@@ -90,7 +91,7 @@
 			},
 			{
 				"command": "azure-work-management.set-iteration",
-				"title": "Set the iteration",
+				"title": "Azure Work Management: Set Iteration",
 				"icon": {
 					"light": "src/resources/light/iteration.svg",
 					"dark": "src/resources/dark/iteration.svg"
@@ -98,7 +99,7 @@
 			},
 			{
 				"command": "azure-work-management.open-work-item",
-				"title": "Open Work Item",
+				"title": "Azure Work Management: Open Work Item",
 				"icon": {
 					"light": "src/resources/light/info.svg",
 					"dark": "src/resources/dark/info.svg"

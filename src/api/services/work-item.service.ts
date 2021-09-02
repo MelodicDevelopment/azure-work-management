@@ -25,11 +25,15 @@ export class WorkItemService extends ApiBase {
 		return this.axios
 			.post(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/wiql?${this.apiVersion}`, data)
 			.then((response: AxiosResponse<WiqlQueryResult>) => {
-				return this.getWorkItemsByBatch(response.data.workItems.map((wi) => wi.id));
+				return this.getWorkItems(response.data.workItems.map((wi) => wi.id));
 			});
 	}
 
 	getWorkItems(ids: number[]): Promise<WorkItem[]> {
+		if (ids.length === 0) {
+			return Promise.resolve([]);
+		}
+
 		return this.axios
 			.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems?${this.apiVersion}&ids=${ids.join(',')}&$expand=All`)
 			.then((response) => {

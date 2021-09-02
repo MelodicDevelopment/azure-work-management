@@ -3,7 +3,6 @@ import { IterationService, TeamFieldValuesService } from './api/services';
 import { Iteration } from './api/types';
 import { WorkItemItem } from './apps/boards';
 import { BoardsTreeProvider } from './apps/boards/board-tree.provider';
-import { BoardsConfigPanel } from './apps/boards/boards-config.panel';
 import { getAppSettings } from './services';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -11,10 +10,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	vscode.window.registerTreeDataProvider('azure-work-management.open-boards', boardTreeProvider);
 	vscode.commands.registerCommand('azure-work-management.refresh-boards', () => boardTreeProvider.refresh());
-
-	vscode.commands.registerCommand('azure-work-management.open-config-panel', () => {
-		BoardsConfigPanel.createOrShow(context.extensionUri);
-	});
 
 	vscode.commands.registerCommand('azure-work-management.open-config-settings', () => {
 		vscode.commands.executeCommand('workbench.action.openSettings', 'azure-work-management');
@@ -54,7 +49,7 @@ const setCurrentIteration = async (globalstate: vscode.Memento): Promise<void> =
 	});
 
 	if (result) {
-		globalstate.update('iteration-path', result?.data.path);
+		getAppSettings().update('iteration', result.data.path);
 	}
 };
 

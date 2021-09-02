@@ -7,8 +7,9 @@ export const isValidAppSettings = (): boolean => {
 	const personalAccessToken: string = getAppSettings().get('personal-access-token') as string;
 	const project: string = getAppSettings().get('project') as string;
 	const team: string = getAppSettings().get('team') as string;
+	const iteration: string = getAppSettings().get('iteration') as string;
 
-	if (organization && personalAccessToken && project && team) {
+	if (organization && personalAccessToken && project && team && iteration) {
 		return true;
 	}
 

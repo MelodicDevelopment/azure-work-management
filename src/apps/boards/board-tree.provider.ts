@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import { Board, Column, Iteration, WorkItem } from '../../api';
-import { BoardService, IterationService, TeamFieldValuesService, WorkItemService } from '../../api/services';
+import { Board, Column, WorkItem } from '../../api';
+import { BoardService, WorkItemService } from '../../api/services';
 import { BoardItem } from './board-item.class';
 import { ColumnItem } from './column-item.class';
 import { WorkItemItem } from './work-item-item.class';
-import { isValidAppSettings } from '../../services';
+import { getAppSettings, isValidAppSettings } from '../../services';
 
 export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private _boardService: BoardService = new BoardService();
@@ -24,7 +24,7 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 	}
 
 	getChildren(element?: vscode.TreeItem): vscode.ProviderResult<vscode.TreeItem[]> {
-		if (isValidAppSettings() && this.hasIteration()) {
+		if (isValidAppSettings()) {
 			const contextValueGetters: { [key: string]: () => Promise<vscode.TreeItem[]> } = {
 				default: this.getBoards.bind(this),
 				board: this.getColumns.bind(this, element as BoardItem),
@@ -37,10 +37,6 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 		}
 
 		return [];
-	}
-
-	private hasIteration(): boolean {
-		return this._context.globalState.keys().includes('iteration-path');
 	}
 
 	private getBoards(): Promise<BoardItem[]> {
@@ -60,11 +56,13 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 	}
 
 	private getWorkItems(element: ColumnItem): Promise<vscode.TreeItem[]> {
-		const currentIterationPath: string = this._context.globalState.get('iteration-path') as string;
+		const currentIterationPath: string = getAppSettings().get('iteration') as string;
 		const systemAreaPaths: string[] = JSON.parse(this._context.globalState.get('system-area-path') as string) as string[];
 		const boardColumn: string = element.getColumnName();
 
 		return this._workItemService.queryForWorkItems(currentIterationPath, systemAreaPaths, boardColumn).then((workItems: WorkItem[]) => {
+			console.log(workItems);
+
 			return workItems.map((workItem) => {
 				return new WorkItemItem(workItem, vscode.TreeItemCollapsibleState.Collapsed);
 			});
