@@ -23,7 +23,7 @@ export class WorkItemService extends ApiBase {
 		};
 
 		return this.axios
-			.post(`${this.baseUrl}/${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/wiql?${this.apiVersion}`, data)
+			.post(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/wiql?${this.apiVersion}`, data)
 			.then((response: AxiosResponse<WiqlQueryResult>) => {
 				return this.getWorkItemsByBatch(response.data.workItems.map((wi) => wi.id));
 			});
@@ -31,19 +31,23 @@ export class WorkItemService extends ApiBase {
 
 	getWorkItems(ids: number[]): Promise<WorkItem[]> {
 		return this.axios
-			.get(`${this.baseUrl}/${this.organizationName}/${this.projectName}/${this.endPoint}/workitems?${this.apiVersion}&ids=${ids.join(',')}&$expand=All`)
+			.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems?${this.apiVersion}&ids=${ids.join(',')}&$expand=All`)
 			.then((response) => {
 				return (response.data as MultValueResponse<WorkItem>).value;
 			});
 	}
 
 	getWorkItemsByBatch(ids: number[]): Promise<WorkItem[]> {
+		if (ids.length === 0) {
+			return Promise.resolve([]);
+		}
+
 		const data: WorkItemBatchRequest = {
 			ids: ids,
 			fields: CommonWorkItemProperties
 		};
 
-		return this.axios.post(`${this.baseUrl}/${this.organizationName}/${this.projectName}/${this.endPoint}/workitemsbatch?${this.apiVersion}`, data).then((response) => {
+		return this.axios.post(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitemsbatch?${this.apiVersion}`, data).then((response) => {
 			return (response.data as MultValueResponse<WorkItem>).value;
 		});
 	}

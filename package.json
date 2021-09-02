@@ -64,13 +64,17 @@
 		"viewsWelcome": [
 			{
 				"view": "azure-work-management.open-boards",
-				"contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)"
+				"contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)\n[Set Iteration](command:azure-work-management.set-iteration)"
 			}
 		],
 		"commands": [
 			{
 				"command": "azure-work-management.open-config-settings",
-				"title": "Open Azure Work Management Configuration Settings"
+				"title": "Open Azure Work Management Configuration Settings",
+				"icon": {
+					"light": "src/resources/light/settings.svg",
+					"dark": "src/resources/dark/settings.svg"
+				}
 			},
 			{
 				"command": "azure-work-management.open-config-panel",
@@ -78,19 +82,52 @@
 			},
 			{
 				"command": "azure-work-management.refresh-boards",
-				"title": "Refresh",
+				"title": "Refresh Boards",
 				"icon": {
 					"light": "src/resources/light/refresh.svg",
 					"dark": "src/resources/dark/refresh.svg"
+				}
+			},
+			{
+				"command": "azure-work-management.set-iteration",
+				"title": "Set the iteration",
+				"icon": {
+					"light": "src/resources/light/iteration.svg",
+					"dark": "src/resources/dark/iteration.svg"
+				}
+			},
+			{
+				"command": "azure-work-management.open-work-item",
+				"title": "Open Work Item",
+				"icon": {
+					"light": "src/resources/light/info.svg",
+					"dark": "src/resources/dark/info.svg"
 				}
 			}
 		],
 		"menus": {
 			"view/title": [
 				{
+					"command": "azure-work-management.open-config-settings",
+					"when": "view == azure-work-management.open-boards",
+					"group": "navigation"
+				},
+				{
 					"command": "azure-work-management.refresh-boards",
 					"when": "view == azure-work-management.open-boards",
 					"group": "navigation"
+				},
+				{
+					"command": "azure-work-management.set-iteration",
+					"when": "view == azure-work-management.open-boards",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "azure-work-management.open-work-item",
+					"when": "view == azure-work-management.open-boards && viewItem == workItem",
+					"group": "inline"
 				}
 			]
 		}

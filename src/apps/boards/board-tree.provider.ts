@@ -4,23 +4,7 @@ import { BoardService, IterationService, TeamFieldValuesService, WorkItemService
 import { BoardItem } from './board-item.class';
 import { ColumnItem } from './column-item.class';
 import { WorkItemItem } from './work-item-item.class';
-import { getAppSettings, isValidAppSettings } from '../../services';
-
-const setCurrentIteration = (globalstate: vscode.Memento): Promise<void> => {
-	const iterationService: IterationService = new IterationService();
-	return iterationService.getCurrentIteration().then((iterations: Iteration[]) => {
-		if (iterations.length > 0) {
-			globalstate.update('current-iteration-path', iterations[0].path);
-		}
-	});
-};
-
-const setSystemAreaPaths = (globalstate: vscode.Memento): Promise<void> => {
-	const teamFieldValuesService: TeamFieldValuesService = new TeamFieldValuesService();
-	return teamFieldValuesService.getTeamFieldValues().then((teamFieldValues) => {
-		globalstate.update('system-area-path', JSON.stringify([...teamFieldValues.values.map((tfv) => tfv.value)]));
-	});
-};
+import { isValidAppSettings } from '../../services';
 
 export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private _boardService: BoardService = new BoardService();
@@ -40,23 +24,23 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 	}
 
 	getChildren(element?: vscode.TreeItem): vscode.ProviderResult<vscode.TreeItem[]> {
-		return this.initialize().then(() => {
-			return new Promise(() => {
-				if (isValidAppSettings()) {
-					const contextValueGetters: { [key: string]: () => Promise<vscode.TreeItem[]> } = {
-						default: this.getBoards.bind(this),
-						board: this.getColumns.bind(this, element as BoardItem),
-						column: this.getWorkItems.bind(this, element as ColumnItem),
-						workItem: () => Promise.resolve([])
-					};
+		if (isValidAppSettings() && this.hasIteration()) {
+			const contextValueGetters: { [key: string]: () => Promise<vscode.TreeItem[]> } = {
+				default: this.getBoards.bind(this),
+				board: this.getColumns.bind(this, element as BoardItem),
+				column: this.getWorkItems.bind(this, element as ColumnItem),
+				workItem: () => Promise.resolve([])
+			};
 
-					const key: string = element?.contextValue || 'default';
-					return contextValueGetters[key]();
-				}
+			const key: string = element?.contextValue || 'default';
+			return contextValueGetters[key]();
+		}
 
-				return [];
-			});
-		});
+		return [];
+	}
+
+	private hasIteration(): boolean {
+		return this._context.globalState.keys().includes('iteration-path');
 	}
 
 	private getBoards(): Promise<BoardItem[]> {
@@ -65,41 +49,6 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 				return new BoardItem(board, vscode.TreeItemCollapsibleState.Collapsed);
 			});
 		});
-	}
-
-	private initialize(): Promise<void> {
-		return new Promise((resolve, _) => {
-			if (isValidAppSettings()) {
-				this.loadAdditionalSettings().then(() => {
-					resolve();
-				});
-			} else {
-				//vscode.commands.executeCommand('azure-work-management.open-config-panel');
-				resolve();
-
-				// vscode.window.showErrorMessage('Missing Extension Settings', 'Open Settings').then((response) => {
-				// 	if (response === 'Open Settings') {
-				// 		vscode.commands.executeCommand('workbench.action.openSettings', 'azure-work-management');
-				// 	}
-				// });
-
-				// let check = setInterval(() => {
-				// 	if (getOrganizationName() && getPersonalAccessToken()) {
-				// 		clearInterval(check);
-				// 		vscode.window.showInformationMessage('Window will reload now to activate the extension.').then(() => {
-				// 			return this.loadAdditionalSettings().then(() => {
-				// 				this.refresh();
-				// 				resolve();
-				// 			});
-				// 		});
-				// 	}
-				// }, 100);
-			}
-		});
-	}
-
-	private loadAdditionalSettings(): Promise<void[]> {
-		return Promise.all([setCurrentIteration(this._context.globalState), setSystemAreaPaths(this._context.globalState)]);
 	}
 
 	private getColumns(element: BoardItem): Promise<ColumnItem[]> {
@@ -111,7 +60,7 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 	}
 
 	private getWorkItems(element: ColumnItem): Promise<vscode.TreeItem[]> {
-		const currentIterationPath: string = this._context.globalState.get('current-iteration-path') as string;
+		const currentIterationPath: string = this._context.globalState.get('iteration-path') as string;
 		const systemAreaPaths: string[] = JSON.parse(this._context.globalState.get('system-area-path') as string) as string[];
 		const boardColumn: string = element.getColumnName();
 
