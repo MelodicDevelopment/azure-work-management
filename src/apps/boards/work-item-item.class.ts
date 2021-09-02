@@ -16,9 +16,15 @@ export class WorkItemItem extends vscode.TreeItem {
 
 	constructor(private _workItem: WorkItem, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_workItem.fields['System.Title'], collapsibleState);
+
+		this.tooltip = `Assigned to: ${_workItem.fields['System.AssignedTo'].displayName}\n${removeTags(_workItem.fields['System.Description'])}`;
 	}
 
 	getWorkItemID(): number {
 		return this._workItem.id;
 	}
 }
+
+const removeTags = (str: string): string => {
+	return str.replace(/(<([^>]+)>)/gi, '');
+};

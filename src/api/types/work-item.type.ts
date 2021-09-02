@@ -44,6 +44,7 @@ export type WorkItemFields = {
 	'System.Title': string;
 	'System.BoardColumn': string;
 	'System.BoardColumnDone': boolean;
+	'System.AssignedTo': User;
 	'Microsoft.VSTS.Scheduling.StoryPoints': number;
 	'Microsoft.VSTS.Common.StateChangeDate': string;
 	'Microsoft.VSTS.Common.Priority': number;
