@@ -104,6 +104,14 @@
 					"light": "src/resources/light/info.svg",
 					"dark": "src/resources/dark/info.svg"
 				}
+			},
+			{
+				"command": "azure-work-management.edit-work-item",
+				"title": "Azure Work Management: Edit Work Item",
+				"icon": {
+					"light": "src/resources/light/edit.svg",
+					"dark": "src/resources/dark/edit.svg"
+				}
 			}
 		],
 		"menus": {
@@ -127,6 +135,11 @@
 			"view/item/context": [
 				{
 					"command": "azure-work-management.open-work-item",
+					"when": "view == azure-work-management.open-boards && viewItem == workItem",
+					"group": "inline"
+				},
+				{
+					"command": "azure-work-management.edit-work-item",
 					"when": "view == azure-work-management.open-boards && viewItem == workItem",
 					"group": "inline"
 				}

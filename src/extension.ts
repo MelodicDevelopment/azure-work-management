@@ -3,6 +3,7 @@ import { IterationService, TeamFieldValuesService } from './api/services';
 import { Iteration } from './api/types';
 import { WorkItemItem } from './apps/boards';
 import { BoardsTreeProvider } from './apps/boards/board-tree.provider';
+import { chooseAction } from './apps/boards/work-item-edit.actions';
 import { getAppSettings } from './services';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -26,6 +27,10 @@ export function activate(context: vscode.ExtensionContext) {
 		const organizationName: string = getAppSettings().get('organization') as string;
 		const projectName: string = getAppSettings().get('project') as string;
 		vscode.env.openExternal(vscode.Uri.parse(`https://dev.azure.com/${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`));
+	});
+
+	vscode.commands.registerCommand('azure-work-management.edit-work-item', (workItem: WorkItemItem) => {
+		chooseAction(workItem);
 	});
 }
 

@@ -61,7 +61,7 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 		const boardColumn: string = element.getColumnName();
 
 		return this._workItemService.queryForWorkItems(currentIterationPath, systemAreaPaths, boardColumn).then((workItems: WorkItem[]) => {
-			console.log(workItems);
+			// console.log(workItems);
 
 			return workItems.map((workItem) => {
 				return new WorkItemItem(workItem, vscode.TreeItemCollapsibleState.Collapsed);
