@@ -49,22 +49,23 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 
 	private getColumns(element: BoardItem): Promise<ColumnItem[]> {
 		return this._boardService.getColumns(element.getBoardID()).then((columns: Column[]) => {
+			element.setColumns(columns);
+
 			return columns.map((column) => {
-				return new ColumnItem(column, vscode.TreeItemCollapsibleState.Collapsed);
+				return new ColumnItem(element, column, vscode.TreeItemCollapsibleState.Collapsed);
 			});
 		});
 	}
 
 	private getWorkItems(element: ColumnItem): Promise<vscode.TreeItem[]> {
-		const currentIterationPath: string = getAppSettings().get('iteration') as string;
+		const iterationPath: string = getAppSettings().get('iteration') as string;
 		const systemAreaPaths: string[] = JSON.parse(this._context.globalState.get('system-area-path') as string) as string[];
 		const boardColumn: string = element.getColumnName();
+		const columns: Column[] = element.getBoardItem().getColumns();
 
-		return this._workItemService.queryForWorkItems(currentIterationPath, systemAreaPaths, boardColumn).then((workItems: WorkItem[]) => {
-			// console.log(workItems);
-
+		return this._workItemService.queryForWorkItems(iterationPath, systemAreaPaths, boardColumn).then((workItems: WorkItem[]) => {
 			return workItems.map((workItem) => {
-				return new WorkItemItem(workItem, vscode.TreeItemCollapsibleState.Collapsed);
+				return new WorkItemItem(workItem, columns, vscode.TreeItemCollapsibleState.Collapsed);
 			});
 		});
 	}

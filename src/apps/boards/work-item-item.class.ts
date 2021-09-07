@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { WorkItem } from '../../api/types';
+import { Column, WorkItem } from '../../api/types';
 
 export class WorkItemItem extends vscode.TreeItem {
 	contextValue = 'workItem';
@@ -14,17 +14,40 @@ export class WorkItemItem extends vscode.TreeItem {
 		this._workItem.fields['System.WorkItemType'] === 'User Story' ? 'user-story-work-item.svg' : 'bug-work-item.svg'
 	);
 
-	constructor(private _workItem: WorkItem, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
+	constructor(private _workItem: WorkItem, private _columns: Column[], public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_workItem.fields['System.Title'], collapsibleState);
 
-		this.tooltip = `Assigned to: ${_workItem.fields['System.AssignedTo'].displayName}\n${removeTags(_workItem.fields['System.Description'])}`;
+		this.tooltip = `Assigned to: ${_workItem.fields['System.AssignedTo'].displayName}\n${this.removeTags(_workItem.fields['System.Description'])}`;
 	}
 
 	getWorkItemID(): number {
 		return this._workItem.id;
 	}
-}
 
-const removeTags = (str: string): string => {
-	return str.replace(/(<([^>]+)>)/gi, '');
-};
+	getWorkItemRev(): number {
+		return this._workItem.rev;
+	}
+
+	getColumns(): Column[] {
+		return this._columns;
+	}
+
+	getBoardColumnFieldName(): string {
+		const fields: string[] = Object.keys(this._workItem.fields);
+		for (let field of fields) {
+			if (field.endsWith('_Kanban.Column')) {
+				return field;
+			}
+		}
+
+		return '';
+	}
+
+	private removeTags(str: string): string {
+		if (!str) {
+			return '';
+		}
+
+		return str.replace(/(<([^>]+)>)/gi, '');
+	}
+}

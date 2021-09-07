@@ -5,6 +5,7 @@ export * from './multi-value-response.type';
 export * from './project.type';
 export * from './team-field-values.type';
 export * from './team.type';
+export * from './user-identity.type';
 export * from './user.type';
 export * from './wiql-query-result.type';
 export * from './work-item-batch-request.type';

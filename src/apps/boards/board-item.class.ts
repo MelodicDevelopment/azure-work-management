@@ -1,8 +1,10 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Board } from '../../api/types';
+import { Board, Column } from '../../api/types';
 
 export class BoardItem extends vscode.TreeItem {
+	private _columns: Column[] = [];
+
 	contextValue = 'board';
 
 	iconPath = path.join(__filename, '..', '..', 'src', 'resources', 'board.svg');
@@ -13,5 +15,17 @@ export class BoardItem extends vscode.TreeItem {
 
 	getBoardID(): string {
 		return this._board.id;
+	}
+
+	setColumns(columns: Column[]): void {
+		this._columns = columns;
+	}
+
+	getColumns(): Column[] {
+		return this._columns;
+	}
+
+	getBoard(): Board {
+		return this._board;
 	}
 }

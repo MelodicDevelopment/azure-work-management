@@ -55,4 +55,16 @@ export class WorkItemService extends ApiBase {
 			return (response.data as MultValueResponse<WorkItem>).value;
 		});
 	}
+
+	updateWorkItem(id: number, changes: unknown): Promise<WorkItem> {
+		return this.axios
+			.patch(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems/${id}?${this.apiVersion}`, changes, {
+				headers: {
+					'Content-Type': 'application/json-patch+json'
+				}
+			})
+			.then((response) => {
+				return response.data as WorkItem;
+			});
+	}
 }

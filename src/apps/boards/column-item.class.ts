@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { BoardItem } from '.';
 import { Column } from '../../api/types';
 
 export class ColumnItem extends vscode.TreeItem {
@@ -7,7 +8,7 @@ export class ColumnItem extends vscode.TreeItem {
 
 	iconPath = path.join(__filename, '..', '..', 'src', 'resources', 'board-column.svg');
 
-	constructor(private _column: Column, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
+	constructor(private _board: BoardItem, private _column: Column, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_column.name, collapsibleState);
 	}
 
@@ -17,5 +18,9 @@ export class ColumnItem extends vscode.TreeItem {
 
 	getColumnName(): string {
 		return this._column.name;
+	}
+
+	getBoardItem(): BoardItem {
+		return this._board;
 	}
 }

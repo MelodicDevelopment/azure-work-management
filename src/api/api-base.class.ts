@@ -14,6 +14,7 @@ const getAuthorization = (): string => {
 
 axios.interceptors.request.use((config) => {
 	config.headers = {
+		...config.headers,
 		'Accept': '*/*',
 		'User-Agent': 'Azure Work Management VS Code Extension',
 		'Authorization': `Basic ${getAuthorization()}`
