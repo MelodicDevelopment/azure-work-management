@@ -22,6 +22,7 @@ export const chooseAction = async (workItem: WorkItemItem): Promise<void | strin
 
 export const assignToAction = async (workItem: WorkItemItem): Promise<void | string> => {
 	const teamService: TeamService = new TeamService();
+	const workItemService: WorkItemService = new WorkItemService();
 	const projectName: string = getAppSettings().get('project') as string;
 	const teamName: string = getAppSettings().get('team') as string;
 
@@ -32,18 +33,24 @@ export const assignToAction = async (workItem: WorkItemItem): Promise<void | str
 		}
 	);
 
-	return vscode.window.showInformationMessage(result as string);
+	return workItemService
+		.updateWorkItem(workItem.getWorkItemID(), [
+			{
+				op: 'test',
+				path: '/rev',
+				value: workItem.getWorkItemRev()
+			},
+			{
+				op: 'add',
+				path: `/fields/System.AssignedTo`,
+				value: result as string
+			}
+		])
+		.then((_) => {
+			vscode.commands.executeCommand('azure-work-management.refresh-boards');
+			return vscode.window.showInformationMessage(`Work item assigned to ${result}`);
+		});
 };
-
-// Message: Request failed with status code 500
-// Url: https://dev.azure.com/nhaschools/_apis/projects/School Apps/teams/Teacher Support/members?api-version=6.0-preview.3
-// Stack: Error: Request failed with status code 500
-// 	at createError (/Users/rickhopkins/Source/MelodicDevelopment/azure-work-management/dist/extension.js:1348:15)
-// 	at settle (/Users/rickhopkins/Source/MelodicDevelopment/azure-work-management/dist/extension.js:1317:12)
-// 	at IncomingMessage.handleStreamEnd (/Users/rickhopkins/Source/MelodicDevelopment/azure-work-management/dist/extension.js:1930:11)
-// 	at IncomingMessage.emit (events.js:327:22)
-// 	at endReadableNT (internal/streams/readable.js:1327:12)
-// 	at processTicksAndRejections (internal/process/task_queues.js:80:21)
 
 export const moveToBoardAction = async (workItem: WorkItemItem): Promise<void | string> => {
 	const columns: Column[] = workItem.getColumns();
