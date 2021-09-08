@@ -2,6 +2,7 @@
 	"name": "azure-work-management",
 	"displayName": "Azure Work Management",
 	"description": "Integrates Azure work items into VS Code.",
+	"publisher": "MelodicDevelopment",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.59.0"
