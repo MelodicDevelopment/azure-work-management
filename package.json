@@ -53,7 +53,7 @@
 				{
 					"id": "azure-work-management-boards",
 					"title": "Azure Work Management",
-					"icon": "src/resources/azure-devops.svg"
+					"icon": "src/resources/azure-devops.png"
 				}
 			]
 		},
@@ -63,7 +63,7 @@
 					"id": "azure-work-management.open-boards",
 					"name": "Boards",
 					"contextualTitle": "Azure Work Management: Boards",
-					"icon": "src/resources/azure-devops.svg"
+					"icon": "src/resources/azure-devops.png"
 				}
 			]
 		},
@@ -78,40 +78,40 @@
 				"command": "azure-work-management.open-config-settings",
 				"title": "Azure Work Management: Open Configuration Settings",
 				"icon": {
-					"light": "src/resources/light/settings.svg",
-					"dark": "src/resources/dark/settings.svg"
+					"light": "src/resources/light/settings.png",
+					"dark": "src/resources/dark/settings.png"
 				}
 			},
 			{
 				"command": "azure-work-management.refresh-boards",
 				"title": "Azure Work Management: Refresh Boards",
 				"icon": {
-					"light": "src/resources/light/refresh.svg",
-					"dark": "src/resources/dark/refresh.svg"
+					"light": "src/resources/light/refresh.png",
+					"dark": "src/resources/dark/refresh.png"
 				}
 			},
 			{
 				"command": "azure-work-management.set-iteration",
 				"title": "Azure Work Management: Set Iteration",
 				"icon": {
-					"light": "src/resources/light/iteration.svg",
-					"dark": "src/resources/dark/iteration.svg"
+					"light": "src/resources/light/iteration.png",
+					"dark": "src/resources/dark/iteration.png"
 				}
 			},
 			{
 				"command": "azure-work-management.open-work-item",
 				"title": "Azure Work Management: Open Work Item",
 				"icon": {
-					"light": "src/resources/light/info.svg",
-					"dark": "src/resources/dark/info.svg"
+					"light": "src/resources/light/info.png",
+					"dark": "src/resources/dark/info.png"
 				}
 			},
 			{
 				"command": "azure-work-management.edit-work-item",
 				"title": "Azure Work Management: Edit Work Item",
 				"icon": {
-					"light": "src/resources/light/edit.svg",
-					"dark": "src/resources/dark/edit.svg"
+					"light": "src/resources/light/edit.png",
+					"dark": "src/resources/dark/edit.png"
 				}
 			}
 		],
