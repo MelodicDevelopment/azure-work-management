@@ -3,6 +3,11 @@
 	"displayName": "Azure Work Management",
 	"description": "Integrates Azure work items into VS Code.",
 	"publisher": "MelodicDevelopment",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MelodicDevelopment/azure-work-management"
+	},
+	"icon": "src/resources/azure-devops-128.png",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.59.0"
@@ -53,7 +58,7 @@
 				{
 					"id": "azure-work-management-boards",
 					"title": "Azure Work Management",
-					"icon": "src/resources/azure-devops.png"
+					"icon": "src/resources/azure-devops.svg"
 				}
 			]
 		},
@@ -63,7 +68,7 @@
 					"id": "azure-work-management.open-boards",
 					"name": "Boards",
 					"contextualTitle": "Azure Work Management: Boards",
-					"icon": "src/resources/azure-devops.png"
+					"icon": "src/resources/azure-devops.svg"
 				}
 			]
 		},
@@ -78,40 +83,40 @@
 				"command": "azure-work-management.open-config-settings",
 				"title": "Azure Work Management: Open Configuration Settings",
 				"icon": {
-					"light": "src/resources/light/settings.png",
-					"dark": "src/resources/dark/settings.png"
+					"light": "src/resources/light/settings.svg",
+					"dark": "src/resources/dark/settings.svg"
 				}
 			},
 			{
 				"command": "azure-work-management.refresh-boards",
 				"title": "Azure Work Management: Refresh Boards",
 				"icon": {
-					"light": "src/resources/light/refresh.png",
-					"dark": "src/resources/dark/refresh.png"
+					"light": "src/resources/light/refresh.svg",
+					"dark": "src/resources/dark/refresh.svg"
 				}
 			},
 			{
 				"command": "azure-work-management.set-iteration",
 				"title": "Azure Work Management: Set Iteration",
 				"icon": {
-					"light": "src/resources/light/iteration.png",
-					"dark": "src/resources/dark/iteration.png"
+					"light": "src/resources/light/iteration.svg",
+					"dark": "src/resources/dark/iteration.svg"
 				}
 			},
 			{
 				"command": "azure-work-management.open-work-item",
 				"title": "Azure Work Management: Open Work Item",
 				"icon": {
-					"light": "src/resources/light/info.png",
-					"dark": "src/resources/dark/info.png"
+					"light": "src/resources/light/info.svg",
+					"dark": "src/resources/dark/info.svg"
 				}
 			},
 			{
 				"command": "azure-work-management.edit-work-item",
 				"title": "Azure Work Management: Edit Work Item",
 				"icon": {
-					"light": "src/resources/light/edit.png",
-					"dark": "src/resources/dark/edit.png"
+					"light": "src/resources/light/edit.svg",
+					"dark": "src/resources/dark/edit.svg"
 				}
 			}
 		],
