@@ -13,15 +13,21 @@
 		"url": "https://dev.to/melodicdevelopment"
 	},
 	"icon": "resources/azure-devops-128.png",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"engines": {
 		"vscode": "^1.59.0"
 	},
 	"categories": [
-		"Other", "Azure"
+		"Other",
+		"Azure"
 	],
 	"keywords": [
-		"azure", "work management", "bug", "work item", "devops", "boards"
+		"azure",
+		"work management",
+		"bug",
+		"work item",
+		"devops",
+		"boards"
 	],
 	"activationEvents": [
 		"onCommand:azure-work-management.open-config-panel",
