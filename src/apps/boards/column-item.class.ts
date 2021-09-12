@@ -6,7 +6,7 @@ import { Column } from '../../api/types';
 export class ColumnItem extends vscode.TreeItem {
 	contextValue = 'column';
 
-	iconPath = path.join(__filename, '..', '..', 'src', 'resources', 'board-column.svg');
+	iconPath = path.join(__filename, '..', '..', 'resources', 'board-column.svg');
 
 	constructor(private _board: BoardItem, private _column: Column, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_column.name, collapsibleState);

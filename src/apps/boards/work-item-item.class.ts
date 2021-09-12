@@ -5,14 +5,7 @@ import { Column, WorkItem } from '../../api/types';
 export class WorkItemItem extends vscode.TreeItem {
 	contextValue = 'workItem';
 
-	iconPath = path.join(
-		__filename,
-		'..',
-		'..',
-		'src',
-		'resources',
-		this._workItem.fields['System.WorkItemType'] === 'User Story' ? 'user-story-work-item.svg' : 'bug-work-item.svg'
-	);
+	iconPath = path.join(__filename, '..', '..', 'resources', this._workItem.fields['System.WorkItemType'] === 'User Story' ? 'user-story-work-item.svg' : 'bug-work-item.svg');
 
 	constructor(private _workItem: WorkItem, private _columns: Column[], public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_workItem.fields['System.Title'], collapsibleState);
