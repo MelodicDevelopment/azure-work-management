@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
 import axios, { AxiosStatic } from 'axios';
-
-const appSettings: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('azure-work-management');
+import { getAppSettings } from '../services/app-settings.service';
 
 const getAuthorization = (): string => {
-	const buffer: Buffer = Buffer.from(`:${appSettings.get('personal-access-token')}`);
+	const buffer: Buffer = Buffer.from(`:${getAppSettings().get('personal-access-token')}`);
 	return buffer.toString('base64');
 };
 
@@ -42,7 +41,9 @@ export class ApiBase {
 	protected axios: AxiosStatic = axios;
 	protected apiVersion: string = 'api-version=6.0';
 	protected baseUrl: string = 'https://dev.azure.com/';
-	protected organizationName: string = appSettings.get('organization') as string;
+	protected get organizationName(): string {
+		return getAppSettings().get('organization') as string;
+	}
 
 	constructor(protected endPoint: string) {}
 }

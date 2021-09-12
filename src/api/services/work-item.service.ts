@@ -5,11 +5,13 @@ import { WiqlQueryResult } from '../types/wiql-query-result.type';
 import { CommonWorkItemProperties, WorkItemBatchRequest } from '../types/work-item-batch-request.type';
 import { getAppSettings } from '../../services';
 
-//https://dev.azure.com/{organization}/{project}/{team}/_apis/wit/wiql?api-version=6.0
-
 export class WorkItemService extends ApiBase {
-	protected projectName: string = getAppSettings().get('project') as string;
-	protected teamName: string = getAppSettings().get('team') as string;
+	protected get projectName(): string {
+		return getAppSettings().get('project') as string;
+	}
+	protected get teamName(): string {
+		return getAppSettings().get('team') as string;
+	}
 
 	constructor() {
 		super('_apis/wit');

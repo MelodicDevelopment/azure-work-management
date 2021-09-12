@@ -3,8 +3,6 @@ import { Team, User } from '../types';
 import { MultValueResponse } from '../types/multi-value-response.type';
 import { UserIdentity } from '../types/user-identity.type';
 
-//https://dev.azure.com/{organization}/_apis/teams?
-
 export class TeamService extends ApiBase {
 	protected apiVersion: string = 'api-version=6.0-preview.3';
 

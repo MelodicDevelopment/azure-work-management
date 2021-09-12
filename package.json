@@ -137,17 +137,17 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "azure-work-management.open-config-settings",
-					"when": "view == azure-work-management.open-boards",
-					"group": "navigation"
-				},
-				{
 					"command": "azure-work-management.refresh-boards",
 					"when": "view == azure-work-management.open-boards",
 					"group": "navigation"
 				},
 				{
 					"command": "azure-work-management.set-iteration",
+					"when": "view == azure-work-management.open-boards",
+					"group": "navigation"
+				},
+				{
+					"command": "azure-work-management.open-config-settings",
 					"when": "view == azure-work-management.open-boards",
 					"group": "navigation"
 				}

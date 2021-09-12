@@ -17,10 +17,8 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand('azure-work-management.set-iteration', () => {
-		setCurrentIteration(context.globalState);
+		setCurrentIteration();
 		setSystemAreaPaths(context.globalState);
-
-		vscode.commands.executeCommand('azure-work-management.refresh-boards');
 	});
 
 	vscode.commands.registerCommand('azure-work-management.open-work-item', (workItem: WorkItemItem) => {
@@ -38,7 +36,7 @@ interface IQuickPickItem<T> extends vscode.QuickPickItem {
 	data: T;
 }
 
-const setCurrentIteration = async (globalstate: vscode.Memento): Promise<void> => {
+const setCurrentIteration = async (): Promise<void> => {
 	const iterationService: IterationService = new IterationService();
 	const iterations = iterationService.getIterations().then((iterations) =>
 		iterations.map((iteration) => {
@@ -54,8 +52,12 @@ const setCurrentIteration = async (globalstate: vscode.Memento): Promise<void> =
 	});
 
 	if (result) {
-		getAppSettings().update('iteration', result.data.path);
+		getAppSettings().update('iteration', result.data.path, true);
 	}
+
+	setTimeout(() => {
+		vscode.commands.executeCommand('azure-work-management.refresh-boards');
+	}, 1000);
 };
 
 const setSystemAreaPaths = (globalstate: vscode.Memento): Promise<void> => {
