@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
 import axios, { AxiosStatic } from 'axios';
 
-// TODO: Remove this
-// Azure DevOps Test PAT
-// dv7htpnhrw4ekigk3kgvip44b7dbmgfhghac3jhwu7yb5yxufpta
-
 const appSettings: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('azure-work-management');
 
 const getAuthorization = (): string => {
