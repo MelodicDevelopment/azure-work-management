@@ -81,8 +81,20 @@
 				{
 					"id": "azure-work-management.open-boards",
 					"name": "Boards",
-					"contextualTitle": "Azure Work Management: Boards",
+					"contextualTitle": "Boards",
 					"icon": "resources/azure-devops.svg"
+				},
+				{
+					"id": "azure-work-management.open-backlogs",
+					"name": "BackLogs",
+					"contextualTitle": "BackLogs",
+					"visibility": "collapsed"
+				},
+				{
+					"id": "azure-work-management.open-queries",
+					"name": "Queries",
+					"contextualTitle": "Queries",
+					"visibility": "collapsed"
 				}
 			]
 		},
