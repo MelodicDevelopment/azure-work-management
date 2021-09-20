@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Board, Column } from '../../api/types';
+import { Board, Column } from '../api/types';
 
 export class BoardItem extends vscode.TreeItem {
 	private _columns: Column[] = [];

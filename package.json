@@ -31,7 +31,8 @@
 	],
 	"activationEvents": [
 		"onCommand:azure-work-management.open-config-panel",
-		"onView:azure-work-management.open-boards"
+		"onView:azure-work-management.open-boards",
+		"onView:azure-work-management.open-backlogs"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -88,12 +89,6 @@
 					"id": "azure-work-management.open-backlogs",
 					"name": "BackLogs",
 					"contextualTitle": "BackLogs",
-					"visibility": "collapsed"
-				},
-				{
-					"id": "azure-work-management.open-queries",
-					"name": "Queries",
-					"contextualTitle": "Queries",
 					"visibility": "collapsed"
 				}
 			]

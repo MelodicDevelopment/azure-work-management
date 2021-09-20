@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Column, WorkItem } from '../../api/types';
+import { Column, WorkItem } from '../api/types';
 
 export class WorkItemItem extends vscode.TreeItem {
 	contextValue = 'workItem';

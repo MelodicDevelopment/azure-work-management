@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { BoardItem } from '.';
-import { Column } from '../../api/types';
+import { BoardItem } from '../tree-items';
+import { Column } from '../api/types';
 
 export class ColumnItem extends vscode.TreeItem {
 	contextValue = 'column';

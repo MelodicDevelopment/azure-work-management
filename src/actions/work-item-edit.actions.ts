@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { WorkItemItem } from '.';
-import { Column, TeamService, WorkItemService } from '../../api';
-import { getAppSettings } from '../../services/app-settings.service';
+import { WorkItemItem } from '../tree-items';
+import { Column, TeamService, WorkItemService } from '../api';
+import { getAppSettings } from '../services/app-settings.service';
 
 export const chooseAction = async (workItem: WorkItemItem): Promise<void | string> => {
 	if (!workItem) {
