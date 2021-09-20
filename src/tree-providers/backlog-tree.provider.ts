@@ -46,6 +46,9 @@ export class BacklogTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 	private getWorkItems(element: BacklogItem): Promise<vscode.TreeItem[]> {
 		const backlogID: string = element.getBacklogID();
 		return this._backlogService.getBacklogWorkItems(backlogID).then((workItems: WorkItem[]) => {
+			// const types: string[] = workItems.map((wi) => wi.fields['System.WorkItemType']);
+			// console.log(types.filter((t, i, a) => a.indexOf(t) === i));
+
 			return workItems.map((workItem) => {
 				return new WorkItemItem(workItem, [], vscode.TreeItemCollapsibleState.None);
 			});

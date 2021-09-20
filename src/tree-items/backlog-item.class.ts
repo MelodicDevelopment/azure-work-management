@@ -5,7 +5,10 @@ import { BackLog } from '../api/types';
 export class BacklogItem extends vscode.TreeItem {
 	contextValue = 'backlog';
 
-	iconPath = path.join(__filename, '..', '..', 'resources', 'board.svg');
+	iconPath = {
+		light: path.join(__filename, '..', '..', 'resources', 'light', 'backlog.svg'),
+		dark: path.join(__filename, '..', '..', 'resources', 'dark', 'backlog.svg')
+	};
 
 	constructor(private _backlog: BackLog, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_backlog.name, collapsibleState);

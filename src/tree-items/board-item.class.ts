@@ -7,7 +7,10 @@ export class BoardItem extends vscode.TreeItem {
 
 	contextValue = 'board';
 
-	iconPath = path.join(__filename, '..', '..', 'resources', 'board.svg');
+	iconPath = {
+		light: path.join(__filename, '..', '..', 'resources', 'light', 'board.svg'),
+		dark: path.join(__filename, '..', '..', 'resources', 'dark', 'board.svg')
+	};
 
 	constructor(private _board: Board, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_board.name, collapsibleState);
