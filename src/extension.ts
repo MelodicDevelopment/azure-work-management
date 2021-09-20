@@ -1,16 +1,21 @@
 import * as vscode from 'vscode';
 import { IterationService, TeamFieldValuesService } from './api/services';
 import { Iteration } from './api/types';
-import { WorkItemItem } from './apps/boards';
-import { BoardsTreeProvider } from './apps/boards/board-tree.provider';
-import { chooseAction } from './apps/boards/work-item-edit.actions';
+import { WorkItemItem } from './tree-items';
+import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
+import { chooseAction } from './actions/work-item-edit.actions';
 import { getAppSettings } from './services';
+import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
 
 export function activate(context: vscode.ExtensionContext) {
 	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(context);
+	const backlogTreeProvider: BacklogTreeProvider = new BacklogTreeProvider(context);
 
 	vscode.window.registerTreeDataProvider('azure-work-management.open-boards', boardTreeProvider);
+	vscode.window.registerTreeDataProvider('azure-work-management.open-backlogs', backlogTreeProvider);
+
 	vscode.commands.registerCommand('azure-work-management.refresh-boards', () => boardTreeProvider.refresh());
+	vscode.commands.registerCommand('azure-work-management.refresh-backlogs', () => backlogTreeProvider.refresh());
 
 	vscode.commands.registerCommand('azure-work-management.open-config-settings', () => {
 		vscode.commands.executeCommand('workbench.action.openSettings', 'azure-work-management');
