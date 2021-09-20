@@ -5,7 +5,7 @@
 	"publisher": "MelodicDevelopment",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/MelodicDevelopment/azure-work-management"
+		"url": "https://github.com/MelodicDevelopment"
 	},
 	"author": {
 		"name": "Rick Hopkins",
@@ -30,7 +30,6 @@
 		"boards"
 	],
 	"activationEvents": [
-		"onCommand:azure-work-management.open-config-panel",
 		"onView:azure-work-management.open-boards",
 		"onView:azure-work-management.open-backlogs"
 	],
@@ -97,6 +96,10 @@
 			{
 				"view": "azure-work-management.open-boards",
 				"contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)\n[Set Iteration](command:azure-work-management.set-iteration)"
+			},
+			{
+				"view": "azure-work-management.open-backlogs",
+				"contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)\n[Set Iteration](command:azure-work-management.set-iteration)"
 			}
 		],
 		"commands": [
@@ -111,6 +114,14 @@
 			{
 				"command": "azure-work-management.refresh-boards",
 				"title": "Azure Work Management: Refresh Boards",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				}
+			},
+			{
+				"command": "azure-work-management.refresh-backlogs",
+				"title": "Azure Work Management: Refresh Backlogs",
 				"icon": {
 					"light": "resources/light/refresh.svg",
 					"dark": "resources/dark/refresh.svg"
@@ -157,6 +168,11 @@
 					"command": "azure-work-management.open-config-settings",
 					"when": "view == azure-work-management.open-boards",
 					"group": "navigation"
+				},
+				{
+					"command": "azure-work-management.refresh-backlogs",
+					"when": "view == azure-work-management.open-backlogs",
+					"group": "navigation"
 				}
 			],
 			"view/item/context": [
@@ -168,6 +184,11 @@
 				{
 					"command": "azure-work-management.edit-work-item",
 					"when": "view == azure-work-management.open-boards && viewItem == workItem",
+					"group": "inline"
+				},
+				{
+					"command": "azure-work-management.open-work-item",
+					"when": "view == azure-work-management.open-backlogs && viewItem == workItem",
 					"group": "inline"
 				}
 			]

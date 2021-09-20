@@ -15,6 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.registerTreeDataProvider('azure-work-management.open-backlogs', backlogTreeProvider);
 
 	vscode.commands.registerCommand('azure-work-management.refresh-boards', () => boardTreeProvider.refresh());
+	vscode.commands.registerCommand('azure-work-management.refresh-backlogs', () => backlogTreeProvider.refresh());
 
 	vscode.commands.registerCommand('azure-work-management.open-config-settings', () => {
 		vscode.commands.executeCommand('workbench.action.openSettings', 'azure-work-management');
