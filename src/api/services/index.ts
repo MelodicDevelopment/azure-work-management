@@ -1,3 +1,4 @@
+export * from './backlog.service';
 export * from './board.service';
 export * from './iteration.service';
 export * from './project.service';

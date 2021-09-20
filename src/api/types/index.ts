@@ -1,3 +1,5 @@
+export * from './backlog-work-item-response.type';
+export * from './backlog.type';
 export * from './board.type';
 export * from './column.type';
 export * from './iteration.type';

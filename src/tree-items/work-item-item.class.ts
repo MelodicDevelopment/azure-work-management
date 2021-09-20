@@ -1,11 +1,14 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Column, WorkItem } from '../../api/types';
+import { Column, WorkItem } from '../api/types';
 
 export class WorkItemItem extends vscode.TreeItem {
 	contextValue = 'workItem';
 
-	iconPath = path.join(__filename, '..', '..', 'resources', this._workItem.fields['System.WorkItemType'] === 'User Story' ? 'user-story-work-item.svg' : 'bug-work-item.svg');
+	iconPath = {
+		light: path.join(__filename, '..', '..', 'resources', 'light', this.getIcon()),
+		dark: path.join(__filename, '..', '..', 'resources', 'dark', this.getIcon())
+	};
 
 	constructor(private _workItem: WorkItem, private _columns: Column[], public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_workItem.fields['System.Title'], collapsibleState);
@@ -34,6 +37,21 @@ export class WorkItemItem extends vscode.TreeItem {
 		}
 
 		return '';
+	}
+
+	private getIcon(): string {
+		const icons: { [key: string]: string } = {
+			'default': 'user-story-work-item.svg',
+			'User Story': 'user-story-work-item.svg',
+			'Bug': 'bug-work-item.svg',
+			'Task': 'task-work-item.svg',
+			'Epic': 'epic-work-item.svg',
+			'Feature': 'feature-work-item.svg',
+			'Project': 'project-work-item.svg'
+		};
+
+		const workItemType: string = this._workItem.fields['System.WorkItemType'];
+		return icons[workItemType] || icons['default'];
 	}
 
 	private removeTags(str: string): string {

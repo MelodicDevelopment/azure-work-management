@@ -36,11 +36,22 @@ export class WorkItemService extends ApiBase {
 			return Promise.resolve([]);
 		}
 
-		return this.axios
-			.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems?${this.apiVersion}&ids=${ids.join(',')}&$expand=All`)
-			.then((response) => {
-				return (response.data as MultValueResponse<WorkItem>).value;
-			});
+		const promises = [];
+
+		const batches = this.chunkIDs(ids, 200);
+		for (const batch of batches) {
+			const request = this.axios
+				.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems?${this.apiVersion}&ids=${batch.join(',')}&$expand=All`)
+				.then((response) => {
+					return (response.data as MultValueResponse<WorkItem>).value;
+				});
+
+			promises.push(request);
+		}
+
+		return Promise.all(promises).then((responses) => {
+			return Array.prototype.concat.apply([], responses);
+		});
 	}
 
 	getWorkItemsByBatch(ids: number[]): Promise<WorkItem[]> {
@@ -68,5 +79,11 @@ export class WorkItemService extends ApiBase {
 			.then((response) => {
 				return response.data as WorkItem;
 			});
+	}
+
+	private *chunkIDs(ids: number[], chunkSize: number): Generator<number[], void, unknown> {
+		while (ids.length) {
+			yield ids.splice(0, chunkSize);
+		}
 	}
 }

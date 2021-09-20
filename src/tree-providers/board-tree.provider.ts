@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import { Board, Column, WorkItem } from '../../api';
-import { BoardService, WorkItemService } from '../../api/services';
-import { BoardItem } from './board-item.class';
-import { ColumnItem } from './column-item.class';
-import { WorkItemItem } from './work-item-item.class';
-import { getAppSettings, isValidAppSettings } from '../../services';
+import { Board, Column, WorkItem } from '../api';
+import { BoardService, WorkItemService } from '../api/services';
+import { BoardItem } from '../tree-items/board-item.class';
+import { ColumnItem } from '../tree-items/column-item.class';
+import { WorkItemItem } from '../tree-items/work-item-item.class';
+import { getAppSettings, isValidAppSettings } from '../services';
 
 export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private _boardService: BoardService = new BoardService();
