@@ -1,3 +1,8 @@
+## version 1.0.5
+
+-   updated README.md for 1.0.4 changes
+-   created CHANGELOG.md
+
 ## version 1.0.4
 
 -   Added back logs tree view
