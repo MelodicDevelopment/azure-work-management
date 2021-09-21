@@ -6,6 +6,12 @@ You can perform minor changes on work items like changing which column the task 
 
 ![AWM Interface](https://i.postimg.cc/ncDHqpPb/screenshot-2.png)
 
+### Update 1.0.4
+
+You can now view back logs as well as boards! They will load below the Boards section and load all the work items in those back logs.
+
+![Backlogs](https://i.postimg.cc/bw36v4jZ/screenshot-5.png)
+
 # Usage
 
 You will need a personal access token from Azure DevOps to use this extension. You can create a PAT in the Azure DevOps interface under the user settings menu. The PAT will need read, write, & manage access on work items.
