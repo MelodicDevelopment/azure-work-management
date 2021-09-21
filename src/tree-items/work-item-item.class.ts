@@ -10,10 +10,18 @@ export class WorkItemItem extends vscode.TreeItem {
 		dark: path.join(__filename, '..', '..', 'resources', 'dark', this.getIcon())
 	};
 
+	command = {
+		title: 'Open Work Item',
+		command: 'azure-work-management.open-work-item',
+		arguments: [this]
+	};
+
 	constructor(private _workItem: WorkItem, private _columns: Column[], public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
 		super(_workItem.fields['System.Title'], collapsibleState);
 
-		this.tooltip = `Assigned to: ${_workItem.fields['System.AssignedTo']?.displayName || 'Unassigned'}\n${this.removeTags(_workItem.fields['System.Description'])}`;
+		this.tooltip = `Assigned to: ${_workItem.fields['System.AssignedTo']?.displayName || 'Unassigned'}\n${
+			_workItem.fields['System.Description'] ? '\n' + this.removeTags(_workItem.fields['System.Description']) : ''
+		}`;
 	}
 
 	getWorkItemID(): number {

@@ -136,14 +136,6 @@
 				}
 			},
 			{
-				"command": "azure-work-management.open-work-item",
-				"title": "Azure Work Management: Open Work Item",
-				"icon": {
-					"light": "resources/light/info.svg",
-					"dark": "resources/dark/info.svg"
-				}
-			},
-			{
 				"command": "azure-work-management.edit-work-item",
 				"title": "Azure Work Management: Edit Work Item",
 				"icon": {
@@ -177,18 +169,8 @@
 			],
 			"view/item/context": [
 				{
-					"command": "azure-work-management.open-work-item",
-					"when": "view == azure-work-management.open-boards && viewItem == workItem",
-					"group": "inline"
-				},
-				{
 					"command": "azure-work-management.edit-work-item",
 					"when": "view == azure-work-management.open-boards && viewItem == workItem",
-					"group": "inline"
-				},
-				{
-					"command": "azure-work-management.open-work-item",
-					"when": "view == azure-work-management.open-backlogs && viewItem == workItem",
 					"group": "inline"
 				}
 			]
