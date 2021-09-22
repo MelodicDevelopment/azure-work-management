@@ -62,8 +62,9 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 		const systemAreaPaths: string[] = JSON.parse(this._context.globalState.get('system-area-path') as string) as string[];
 		const boardColumn: string = element.getColumnName();
 		const columns: Column[] = element.getBoardItem().getColumns();
+		const workItemTypes: string[] = element.getAllowedWorkItemTypes();
 
-		return this._workItemService.queryForWorkItems(iterationPath, systemAreaPaths, boardColumn).then((workItems: WorkItem[]) => {
+		return this._workItemService.queryForWorkItems(iterationPath, systemAreaPaths, boardColumn, workItemTypes).then((workItems: WorkItem[]) => {
 			return workItems.map((workItem) => {
 				return new WorkItemItem(workItem, columns, vscode.TreeItemCollapsibleState.None);
 			});

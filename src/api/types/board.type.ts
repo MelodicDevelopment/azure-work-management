@@ -6,4 +6,11 @@ export type Board = {
 	name: string;
 	columns: Column[];
 	canEdit: boolean;
+	allowedMappings: IAllowedMappings;
 };
+
+interface IAllowedMappings {
+	[key: string]: {
+		[key: string]: string[];
+	};
+}
