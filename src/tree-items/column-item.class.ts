@@ -26,4 +26,8 @@ export class ColumnItem extends vscode.TreeItem {
 	getBoardItem(): BoardItem {
 		return this._board;
 	}
+
+	getAllowedWorkItemTypes(): string[] {
+		return Object.keys(this._column.stateMappings);
+	}
 }
