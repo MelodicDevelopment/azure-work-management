@@ -5,4 +5,7 @@ export type Column = {
 	itemLimit: number;
 	description?: string;
 	isSplit?: boolean;
+	stateMappings: {
+		[key: string]: string;
+	};
 };

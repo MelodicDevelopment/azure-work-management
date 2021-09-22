@@ -1,3 +1,7 @@
+## version 1.0.6
+
+-   fixed bug that was causing work items to show under multiple boards
+
 ## version 1.0.5
 
 -   updated README.md for 1.0.4 changes
