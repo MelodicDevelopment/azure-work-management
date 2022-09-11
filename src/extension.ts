@@ -22,8 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand('azure-work-management.set-iteration', () => {
-		setCurrentIteration();
-		setSystemAreaPaths(context.globalState);
+		setSystemAreaPaths(context.globalState).then(() => {
+			setCurrentIteration();
+		});
 	});
 
 	vscode.commands.registerCommand('azure-work-management.open-work-item', (workItem: WorkItemItem) => {
@@ -66,6 +67,7 @@ const setCurrentIteration = async (): Promise<void> => {
 };
 
 const setSystemAreaPaths = (globalstate: vscode.Memento): Promise<void> => {
+	globalstate.update('system-area-path', null);
 	const teamFieldValuesService: TeamFieldValuesService = new TeamFieldValuesService();
 	return teamFieldValuesService.getTeamFieldValues().then((teamFieldValues) => {
 		globalstate.update('system-area-path', JSON.stringify([...teamFieldValues.values.map((tfv) => tfv.value)]));

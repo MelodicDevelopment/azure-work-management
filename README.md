@@ -24,7 +24,7 @@ Once you have a PAT and have installed the extension you will need to set the co
 
 # Feedback
 
-This is just the first vscode extension I've created and this is an MVP version of some ideas I'd like to continue to work on for managing Azure work items within vscode. If you have feedback, questions, etc you can contact me at <rick.hopkins@gmail.com>.
+This is just the first vscode extension I've created and this is an MVP version of some ideas I'd like to continue to work on for managing Azure work items within vscode. If you have feedback, questions, etc you can contact me at <rick@melodicdevelopment.com>.
 
 I'm also just getting started with some tech blogging and working towards spreading a little bit of my development experience out there in the world for others. If you're interested in that come give me a follow at...
 

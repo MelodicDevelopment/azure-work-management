@@ -6,6 +6,7 @@ node_modules
 .dccache
 .DS_Store
 *.code-workspace
+thunder-tests
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
