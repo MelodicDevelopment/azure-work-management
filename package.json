@@ -5,11 +5,11 @@
 	"publisher": "MelodicDevelopment",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/MelodicDevelopment"
+		"url": "https://github.com/MelodicDevelopment/azure-work-management"
 	},
 	"author": {
 		"name": "Rick Hopkins",
-		"email": "rick.hopkins@gmail.com",
+		"email": "rick@melodicdevelopment.com",
 		"url": "https://dev.to/melodicdevelopment"
 	},
 	"icon": "resources/azure-devops-128.png",

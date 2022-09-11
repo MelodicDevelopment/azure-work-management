@@ -6,16 +6,10 @@ import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 import { chooseAction } from './actions/work-item-edit.actions';
 import { getAppSettings } from './services';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
-import { WorkItemFormPanel } from './panels/work-item-form';
 
 export function activate(context: vscode.ExtensionContext) {
 	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(context);
 	const backlogTreeProvider: BacklogTreeProvider = new BacklogTreeProvider(context);
-
-	// const workItemFormPanel = new WorkItemFormPanel(context.extensionUri);
-
-	// context.subscriptions.push(
-	// 	vscode.window.registerWebviewViewProvider(WorkItemFormPanel.viewType, WorkItemFormPanel));
 
 	vscode.window.registerTreeDataProvider('azure-work-management.open-boards', boardTreeProvider);
 	vscode.window.registerTreeDataProvider('azure-work-management.open-backlogs', backlogTreeProvider);
