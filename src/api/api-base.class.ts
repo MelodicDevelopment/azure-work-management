@@ -3,7 +3,7 @@ import axios, { AxiosStatic } from 'axios';
 import { getAppSettings } from '../services/app-settings.service';
 
 const getAuthorization = (): string => {
-	const buffer: Buffer = Buffer.from(`:${getAppSettings().get('personal-access-token')}`);
+	const buffer: Buffer = Buffer.from(`:${getAppSettings().get('personalAccessToken')}`);
 	return buffer.toString('base64');
 };
 
@@ -40,9 +40,9 @@ Stack: ${error.stack}`
 export class ApiBase {
 	protected axios: AxiosStatic = axios;
 	protected apiVersion: string = 'api-version=6.0';
-	protected baseUrl: string = 'https://dev.azure.com/';
+	protected baseUrl: string = getAppSettings().get('serverUrl') as string;
 	protected get organizationName(): string {
-		return getAppSettings().get('organization') as string;
+		return encodeURI(getAppSettings().get('organization') as string);
 	}
 
 	constructor(protected endPoint: string) {}

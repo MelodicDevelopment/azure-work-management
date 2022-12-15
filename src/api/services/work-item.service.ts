@@ -7,10 +7,10 @@ import { getAppSettings } from '../../services';
 
 export class WorkItemService extends ApiBase {
 	protected get projectName(): string {
-		return getAppSettings().get('project') as string;
+		return encodeURI(getAppSettings().get('project') as string);
 	}
 	protected get teamName(): string {
-		return getAppSettings().get('team') as string;
+		return encodeURI(getAppSettings().get('team') as string);
 	}
 
 	constructor() {

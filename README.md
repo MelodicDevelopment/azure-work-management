@@ -6,6 +6,14 @@ You can perform minor changes on work items like changing which column the task 
 
 ![AWM Interface](https://i.postimg.cc/ncDHqpPb/screenshot-2.png)
 
+### Update 1.0.9
+
+_Support for onpremise installations_: There is now a setting available to change the base url of your Azure DevOps host.
+
+_Add ID to work items In tree view_: The id of the task is now included in the tree view.
+
+_Settings used in url should be URL Encoded_: The organization, project, and team settings are now url encoded.
+
 ### Update 1.0.4
 
 You can now view back logs as well as boards! They will load below the Boards section and load all the work items in those back logs.

@@ -17,7 +17,7 @@ export class WorkItemItem extends vscode.TreeItem {
 	};
 
 	constructor(private _workItem: WorkItem, private _columns: Column[], public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
-		super(_workItem.fields['System.Title'], collapsibleState);
+		super(`${_workItem.id}: ${_workItem.fields['System.Title']}`, collapsibleState);
 
 		this.tooltip = `Assigned to: ${_workItem.fields['System.AssignedTo']?.displayName || 'Unassigned'}\n${
 			_workItem.fields['System.Description'] ? '\n' + this.removeTags(_workItem.fields['System.Description']) : ''

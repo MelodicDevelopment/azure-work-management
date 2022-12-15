@@ -13,7 +13,7 @@
 		"url": "https://dev.to/melodicdevelopment"
 	},
 	"icon": "resources/azure-devops-128.png",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"engines": {
 		"vscode": "^1.59.0"
 	},
@@ -39,12 +39,17 @@
 			{
 				"title": "Azure Work Management",
 				"properties": {
+					"azure-work-management.serverUrl": {
+						"type": "string",
+						"default": "https://dev.azure.com/",
+						"description": "The url of the server where your Azure DevOps instance is hosted. Defaults to Azure DevOps Cloud Instance."
+					},
 					"azure-work-management.organization": {
 						"type": "string",
 						"default": null,
 						"description": "The Azure organization."
 					},
-					"azure-work-management.personal-access-token": {
+					"azure-work-management.personalAccessToken": {
 						"type": "string",
 						"default": null,
 						"description": "The Azure personal access token."

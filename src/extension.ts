@@ -28,9 +28,9 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	vscode.commands.registerCommand('azure-work-management.open-work-item', (workItem: WorkItemItem) => {
-		const organizationName: string = getAppSettings().get('organization') as string;
-		const projectName: string = getAppSettings().get('project') as string;
-		vscode.env.openExternal(vscode.Uri.parse(`https://dev.azure.com/${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`));
+		const organizationName: string = encodeURI(getAppSettings().get('organization') as string);
+		const projectName: string = encodeURI(getAppSettings().get('project') as string);
+		vscode.env.openExternal(vscode.Uri.parse(`${getAppSettings().get('serverUrl')}${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`));
 	});
 
 	vscode.commands.registerCommand('azure-work-management.edit-work-item', (workItem: WorkItemItem) => {
