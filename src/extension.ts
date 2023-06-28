@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { IterationService, TeamFieldValuesService } from './api/services';
-import { Iteration } from './api/types';
+import { Iteration, TeamFieldValues } from './api/types';
 import { WorkItemItem } from './tree-items';
 import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 import { chooseAction } from './actions/work-item-edit.actions';
@@ -66,10 +66,8 @@ const setCurrentIteration = async (): Promise<void> => {
 	}, 1000);
 };
 
-const setSystemAreaPaths = (globalstate: vscode.Memento): Promise<void> => {
-	globalstate.update('system-area-path', null);
+const setSystemAreaPaths = (globalState: vscode.Memento): Promise<void> => {
+	globalState.update('system-area-path', null);
 	const teamFieldValuesService: TeamFieldValuesService = new TeamFieldValuesService();
-	return teamFieldValuesService.getTeamFieldValues().then((teamFieldValues) => {
-		globalstate.update('system-area-path', JSON.stringify([...teamFieldValues.values.map((tfv) => tfv.value)]));
-	});
+	return teamFieldValuesService.getTeamFieldValues().then((teamFields: TeamFieldValues): Thenable<void> => globalState.update('system-area-path', JSON.stringify([...teamFields.values])));
 };

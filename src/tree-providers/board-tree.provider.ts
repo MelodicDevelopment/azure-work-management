@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Board, Column, WorkItem } from '../api';
+import { Board, Column, TeamFieldValue, WorkItem } from '../api';
 import { BoardService, WorkItemService } from '../api/services';
 import { BoardItem } from '../tree-items/board-item.class';
 import { ColumnItem } from '../tree-items/column-item.class';
@@ -59,7 +59,7 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 
 	private getWorkItems(element: ColumnItem): Promise<vscode.TreeItem[]> {
 		const iterationPath: string = getAppSettings().get('iteration') as string;
-		const systemAreaPaths: string[] = JSON.parse(this._context.globalState.get('system-area-path') as string) as string[];
+		const systemAreaPaths: TeamFieldValue[] = JSON.parse(this._context.globalState.get('system-area-path') as string);
 		const boardColumn: string = element.getColumnName();
 		const columns: Column[] = element.getBoardItem().getColumns();
 		const workItemTypes: string[] = element.getAllowedWorkItemTypes();
