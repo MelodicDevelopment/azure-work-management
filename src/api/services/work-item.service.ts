@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { ApiBase } from '../api-base.class';
-import { MultValueResponse, WorkItem } from '../types';
+import { MultValueResponse, TeamFieldValue, WorkItem } from '../types';
 import { WiqlQueryResult } from '../types/wiql-query-result.type';
 import { CommonWorkItemProperties, WorkItemBatchRequest } from '../types/work-item-batch-request.type';
 import { getAppSettings } from '../../services';
@@ -17,8 +17,8 @@ export class WorkItemService extends ApiBase {
 		super('_apis/wit');
 	}
 
-	queryForWorkItems(iterationPath: string, areaPath: string[], boardColumn: string, workItemTypes: string[]): Promise<WorkItem[]> {
-		const systemAreaPath: string = areaPath.map((ap) => `[System.AreaPath] = '${ap}'`).join(' OR ');
+	queryForWorkItems(iterationPath: string, areaPath: TeamFieldValue[], boardColumn: string, workItemTypes: string[]): Promise<WorkItem[]> {
+		const systemAreaPath: string = areaPath.map((ap: TeamFieldValue): string => `[System.AreaPath] ${ap.includeChildren ? 'UNDER' : '='} '${ap.value}'`).join(' OR ');
 		const workItemType: string = workItemTypes.map((wit) => `[System.WorkItemType] = '${wit}'`).join(' OR ');
 
 		const data: { query: string } = {
