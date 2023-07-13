@@ -6,6 +6,10 @@ You can perform minor changes on work items like changing which column the task 
 
 ![AWM Interface](https://i.postimg.cc/ncDHqpPb/screenshot-2.png)
 
+### Update 1.0.10
+
+_Support for sub-area paths_: Includes sub-area paths if the team has configured a path to include children.
+
 ### Update 1.0.9
 
 _Support for onpremise installations_: There is now a setting available to change the base url of your Azure DevOps host.
