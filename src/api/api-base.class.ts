@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import axios, { AxiosStatic } from 'axios';
 import { getAppSettings } from '../services/app-settings.service';
+import { WebApi, getPersonalAccessTokenHandler } from "azure-devops-node-api";
 
 const getAuthorization = (): string => {
 	const buffer: Buffer = Buffer.from(`:${getAppSettings().get('personalAccessToken')}`);
@@ -44,6 +45,8 @@ export class ApiBase {
 	protected get organizationName(): string {
 		return encodeURI(getAppSettings().get('organization') as string);
 	}
+	protected authHandler = getPersonalAccessTokenHandler(getAppSettings().get('personalAccessToken')!);
+	protected webApi = new WebApi(`${this.baseUrl}${this.organizationName}`, this.authHandler);
 
 	constructor(protected endPoint: string) {}
 }
