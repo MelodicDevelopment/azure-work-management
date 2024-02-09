@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { BackLog, BacklogService, WorkItem } from '../api';
+import { BacklogService } from '../api';
+import { isValidAppSettings } from '../services';
 import { BacklogItem } from '../tree-items/backlog-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
-import { isValidAppSettings } from '../services';
 
 export class BacklogTreeProvider
   implements vscode.TreeDataProvider<vscode.TreeItem>

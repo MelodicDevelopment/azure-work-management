@@ -55,5 +55,5 @@ export class ApiBase {
     this.authHandler,
   );
 
-  constructor(protected endPoint: string) {}
+  constructor(protected endPoint?: string) {}
 }

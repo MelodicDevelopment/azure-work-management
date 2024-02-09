@@ -9,10 +9,6 @@ export class BoardService extends ApiBase {
     return encodeURI(getAppSettings().get('team') as string);
   }
 
-  constructor() {
-    super('_apis/work/boards');
-  }
-
   async getAll() {
     const workApi = await this.webApi.getWorkApi();
     return await workApi.getBoards(getTeamContext());

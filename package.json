@@ -190,7 +190,7 @@
     "test-watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "fix": "eslint --fix --ext .js,.ts -f stylish . && prettier --write .",
+    "fix": "eslint --fix --ext .ts -f stylish . && prettier --write .",
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {

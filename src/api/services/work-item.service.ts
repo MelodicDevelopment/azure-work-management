@@ -23,7 +23,7 @@ export class WorkItemService extends ApiBase {
     areaPath: TeamFieldValue[],
     boardColumn: string,
     workItemTypes: string[],
-  ): Promise<WorkItem[]> {
+  ) {
     const systemAreaPath: string = areaPath
       .map(
         (ap: TeamFieldValue): string =>
@@ -38,14 +38,11 @@ export class WorkItemService extends ApiBase {
       query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = '${iterationPath}' AND (${systemAreaPath}) AND (${workItemType}) AND [System.BoardColumn] = '${boardColumn}' ORDER BY [State] Asc`,
     };
 
-    return this.axios
-      .post(
-        `${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/wiql?${this.apiVersion}`,
-        data,
-      )
-      .then((response: AxiosResponse<WiqlQueryResult>) => {
-        return this.getWorkItems(response.data.workItems.map((wi) => wi.id));
-      });
+    const response: AxiosResponse<WiqlQueryResult> = await this.axios.post(
+      `${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/wiql?${this.apiVersion}`,
+      data,
+    );
+    return this.getWorkItems(response.data.workItems.map((wi) => wi.id));
   }
 
   async getWorkItems(ids: number[]) {
@@ -70,18 +67,15 @@ export class WorkItemService extends ApiBase {
   }
 
   async updateWorkItem(id: number, changes: unknown): Promise<WorkItem> {
-    return this.axios
-      .patch(
-        `${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems/${id}?${this.apiVersion}`,
-        changes,
-        {
-          headers: {
-            'Content-Type': 'application/json-patch+json',
-          },
+    const response = await this.axios.patch(
+      `${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems/${id}?${this.apiVersion}`,
+      changes,
+      {
+        headers: {
+          'Content-Type': 'application/json-patch+json',
         },
-      )
-      .then((response) => {
-        return response.data as WorkItem;
-      });
+      },
+    );
+    return response.data as WorkItem;
   }
 }

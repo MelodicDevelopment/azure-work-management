@@ -14,10 +14,6 @@ export class BacklogService extends ApiBase {
 
   protected apiVersion: string = 'api-version=6.1-preview.1';
 
-  constructor() {
-    super('_apis/work/backlogs');
-  }
-
   async getBacklogs() {
     const workApi = await this.webApi.getWorkApi();
     return workApi.getBacklogs(getTeamContext());
