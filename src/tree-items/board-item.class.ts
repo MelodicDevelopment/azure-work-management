@@ -1,9 +1,9 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Board, Column } from '../api/types';
+import { Board, BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 
 export class BoardItem extends vscode.TreeItem {
-	private _columns: Column[] = [];
+	private _columns: BoardColumn[] = [];
 
 	contextValue = 'board';
 
@@ -13,18 +13,18 @@ export class BoardItem extends vscode.TreeItem {
 	};
 
 	constructor(private _board: Board, public readonly collapsibleState: vscode.TreeItemCollapsibleState) {
-		super(_board.name, collapsibleState);
+		super(_board.name!, collapsibleState);
 	}
 
 	getBoardID(): string {
-		return this._board.id;
+		return this._board.id!;
 	}
 
-	setColumns(columns: Column[]): void {
+	setColumns(columns: BoardColumn[]): void {
 		this._columns = columns;
 	}
 
-	getColumns(): Column[] {
+	getColumns(): BoardColumn[] {
 		return this._columns;
 	}
 

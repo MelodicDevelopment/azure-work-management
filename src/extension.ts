@@ -1,11 +1,10 @@
 import * as vscode from 'vscode';
-import { IterationService, TeamFieldValuesService } from './api/services';
-import { Iteration, TeamFieldValues } from './api/types';
-import { WorkItemItem } from './tree-items';
-import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 import { chooseAction } from './actions/work-item-edit.actions';
+import { IterationService, TeamFieldValuesService } from './api/services';
 import { getAppSettings } from './services';
+import { WorkItemItem } from './tree-items';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
+import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 
 export function activate(context: vscode.ExtensionContext) {
 	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(context);
@@ -38,18 +37,14 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 }
 
-interface IQuickPickItem<T> extends vscode.QuickPickItem {
-	data: T;
-}
-
-const setCurrentIteration = async (): Promise<void> => {
+const setCurrentIteration = async () => {
 	const iterationService: IterationService = new IterationService();
 	const iterations = iterationService.getIterations().then((iterations) =>
 		iterations.map((iteration) => {
 			return {
-				label: `${iteration.name}:${iteration.attributes.timeFrame}`,
+				label: `${iteration.name}:${iteration.attributes!.timeFrame}`,
 				data: iteration
-			} as IQuickPickItem<Iteration>;
+			};
 		})
 	);
 
@@ -66,8 +61,9 @@ const setCurrentIteration = async (): Promise<void> => {
 	}, 1000);
 };
 
-const setSystemAreaPaths = (globalState: vscode.Memento): Promise<void> => {
+const setSystemAreaPaths = async (globalState: vscode.Memento) => {
 	globalState.update('system-area-path', null);
 	const teamFieldValuesService: TeamFieldValuesService = new TeamFieldValuesService();
-	return teamFieldValuesService.getTeamFieldValues().then((teamFields: TeamFieldValues): Thenable<void> => globalState.update('system-area-path', JSON.stringify([...teamFields.values])));
+	const teamFields = await teamFieldValuesService.getTeamFieldValues();
+	globalState.update('system-area-path', JSON.stringify([...teamFields.values ?? []]));
 };

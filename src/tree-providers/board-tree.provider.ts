@@ -1,10 +1,11 @@
+import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as vscode from 'vscode';
-import { Board, Column, TeamFieldValue, WorkItem } from '../api';
+import { TeamFieldValue, WorkItem } from '../api';
 import { BoardService, WorkItemService } from '../api/services';
+import { getAppSettings, isValidAppSettings } from '../services';
 import { BoardItem } from '../tree-items/board-item.class';
 import { ColumnItem } from '../tree-items/column-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
-import { getAppSettings, isValidAppSettings } from '../services';
 
 export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private _boardService: BoardService = new BoardService();
@@ -39,35 +40,32 @@ export class BoardsTreeProvider implements vscode.TreeDataProvider<vscode.TreeIt
 		return [];
 	}
 
-	private getBoards(): Promise<BoardItem[]> {
-		return this._boardService.getAll().then((boards: Board[]) => {
-			return boards.map((board) => {
-				return new BoardItem(board, vscode.TreeItemCollapsibleState.Collapsed);
-			});
+	private async getBoards(): Promise<BoardItem[]> {
+		const boards = await this._boardService.getAll();
+		return boards.map((board) => {
+			return new BoardItem(board, vscode.TreeItemCollapsibleState.Collapsed);
 		});
 	}
 
-	private getColumns(element: BoardItem): Promise<ColumnItem[]> {
-		return this._boardService.getColumns(element.getBoardID()).then((columns: Column[]) => {
-			element.setColumns(columns);
+	private async getColumns(element: BoardItem) {
+		const columns = await this._boardService.getColumns(element.getBoardID());
+		element.setColumns(columns);
 
-			return columns.map((column) => {
-				return new ColumnItem(element, column, vscode.TreeItemCollapsibleState.Collapsed);
-			});
+		return columns.map((column) => {
+			return new ColumnItem(element, column, vscode.TreeItemCollapsibleState.Collapsed);
 		});
 	}
 
-	private getWorkItems(element: ColumnItem): Promise<vscode.TreeItem[]> {
+	private async getWorkItems(element: ColumnItem) {
 		const iterationPath: string = getAppSettings().get('iteration') as string;
 		const systemAreaPaths: TeamFieldValue[] = JSON.parse(this._context.globalState.get('system-area-path') as string);
 		const boardColumn: string = element.getColumnName();
-		const columns: Column[] = element.getBoardItem().getColumns();
+		const columns: BoardColumn[] = element.getBoardItem().getColumns();
 		const workItemTypes: string[] = element.getAllowedWorkItemTypes();
-
-		return this._workItemService.queryForWorkItems(iterationPath, systemAreaPaths, boardColumn, workItemTypes).then((workItems: WorkItem[]) => {
-			return workItems.map((workItem) => {
-				return new WorkItemItem(workItem, columns, vscode.TreeItemCollapsibleState.None);
-			});
+		const workItems = await this._workItemService.queryForWorkItems(iterationPath, systemAreaPaths, boardColumn, workItemTypes);
+		
+		return workItems.map((workItem) => {
+			return new WorkItemItem(workItem, columns, vscode.TreeItemCollapsibleState.None);
 		});
 	}
 }

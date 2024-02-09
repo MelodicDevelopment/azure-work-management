@@ -1,9 +1,11 @@
 import { AxiosResponse } from 'axios';
 import { ApiBase } from '../api-base.class';
-import { MultValueResponse, TeamFieldValue, WorkItem } from '../types';
+import { MultValueResponse, TeamFieldValue } from '../types';
 import { WiqlQueryResult } from '../types/wiql-query-result.type';
 import { CommonWorkItemProperties, WorkItemBatchRequest } from '../types/work-item-batch-request.type';
-import { getAppSettings } from '../../services';
+import { getAppSettings, getTeamContext } from '../../services';
+import { chunk } from 'lodash';
+import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 
 export class WorkItemService extends ApiBase {
 	protected get projectName(): string {
@@ -17,7 +19,7 @@ export class WorkItemService extends ApiBase {
 		super('_apis/wit');
 	}
 
-	queryForWorkItems(iterationPath: string, areaPath: TeamFieldValue[], boardColumn: string, workItemTypes: string[]): Promise<WorkItem[]> {
+	async queryForWorkItems(iterationPath: string, areaPath: TeamFieldValue[], boardColumn: string, workItemTypes: string[]): Promise<WorkItem[]> {
 		const systemAreaPath: string = areaPath.map((ap: TeamFieldValue): string => `[System.AreaPath] ${ap.includeChildren ? 'UNDER' : '='} '${ap.value}'`).join(' OR ');
 		const workItemType: string = workItemTypes.map((wit) => `[System.WorkItemType] = '${wit}'`).join(' OR ');
 
@@ -32,45 +34,26 @@ export class WorkItemService extends ApiBase {
 			});
 	}
 
-	getWorkItems(ids: number[]): Promise<WorkItem[]> {
+	async getWorkItems(ids: number[]) {
 		if (ids.length === 0) {
-			return Promise.resolve([]);
+			return [];
 		}
 
-		const promises = [];
+		const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+		const chunks = chunk(ids, 200);
+		
+		const result : WorkItem[] = [];
+		
+		const workItemsPromises = chunks.map(idChunk => workItemTrackingApi.getWorkItems(idChunk));
 
-		const batches = this.chunkIDs(ids, 200);
-		for (const batch of batches) {
-			const request = this.axios
-				.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems?${this.apiVersion}&ids=${batch.join(',')}&$expand=All`)
-				.then((response) => {
-					return (response.data as MultValueResponse<WorkItem>).value;
-				});
-
-			promises.push(request);
+		for (const workItemPromise of workItemsPromises) {
+			result.push(...(await workItemPromise));
 		}
-
-		return Promise.all(promises).then((responses) => {
-			return Array.prototype.concat.apply([], responses);
-		});
+		
+		return result;
 	}
 
-	getWorkItemsByBatch(ids: number[]): Promise<WorkItem[]> {
-		if (ids.length === 0) {
-			return Promise.resolve([]);
-		}
-
-		const data: WorkItemBatchRequest = {
-			ids: ids,
-			fields: CommonWorkItemProperties
-		};
-
-		return this.axios.post(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitemsbatch?${this.apiVersion}`, data).then((response) => {
-			return (response.data as MultValueResponse<WorkItem>).value;
-		});
-	}
-
-	updateWorkItem(id: number, changes: unknown): Promise<WorkItem> {
+	async updateWorkItem(id: number, changes: unknown): Promise<WorkItem> {
 		return this.axios
 			.patch(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems/${id}?${this.apiVersion}`, changes, {
 				headers: {
@@ -80,11 +63,5 @@ export class WorkItemService extends ApiBase {
 			.then((response) => {
 				return response.data as WorkItem;
 			});
-	}
-
-	private *chunkIDs(ids: number[], chunkSize: number): Generator<number[], void, unknown> {
-		while (ids.length) {
-			yield ids.splice(0, chunkSize);
-		}
 	}
 }

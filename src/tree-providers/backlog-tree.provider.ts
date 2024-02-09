@@ -35,23 +35,21 @@ export class BacklogTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 		return [];
 	}
 
-	private getBacklogs(): Promise<BacklogItem[]> {
-		return this._backlogService.getBacklogs().then((backlogs: BackLog[]) => {
-			return backlogs.map((backlog) => {
-				return new BacklogItem(backlog, vscode.TreeItemCollapsibleState.Collapsed);
-			});
+	private async getBacklogs() {
+		const backlogs = await this._backlogService.getBacklogs();
+		return backlogs.map((backlog) => {
+			return new BacklogItem(backlog, vscode.TreeItemCollapsibleState.Collapsed);
 		});
 	}
 
-	private getWorkItems(element: BacklogItem): Promise<vscode.TreeItem[]> {
+	private async getWorkItems(element: BacklogItem) {
 		const backlogID: string = element.getBacklogID();
-		return this._backlogService.getBacklogWorkItems(backlogID).then((workItems: WorkItem[]) => {
+		const workItems = await this._backlogService.getBacklogWorkItems(backlogID);
 			// const types: string[] = workItems.map((wi) => wi.fields['System.WorkItemType']);
 			// console.log(types.filter((t, i, a) => a.indexOf(t) === i));
 
-			return workItems.map((workItem) => {
-				return new WorkItemItem(workItem, [], vscode.TreeItemCollapsibleState.None);
-			});
+		return workItems.map((workItem) => {
+			return new WorkItemItem(workItem, [], vscode.TreeItemCollapsibleState.None);
 		});
 	}
 }

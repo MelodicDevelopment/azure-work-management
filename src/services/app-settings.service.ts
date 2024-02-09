@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 
 export const getAppSettings = (): vscode.WorkspaceConfiguration => vscode.workspace.getConfiguration('azure-work-management');
-
+export const getProject = () => getAppSettings().get('project') as string;
+export const getTeam = () => getAppSettings().get('team') as string;
+export const getTeamContext = () => ({project: getProject(), team: getTeam()});
 export const isValidAppSettings = (): boolean => {
 	const serverUrl: string = getAppSettings().get('serverUrl') as string;
 	const organization: string = getAppSettings().get('organization') as string;

@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { WorkItemItem } from '../tree-items';
 import { Column, TeamService, WorkItemService } from '../api';
 import { getAppSettings } from '../services/app-settings.service';
+import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 
 export const chooseAction = async (workItem: WorkItemItem): Promise<void | string> => {
 	if (!workItem) {
@@ -29,7 +30,7 @@ export const assignToAction = async (workItem: WorkItemItem): Promise<void | str
 	const teamName: string = getAppSettings().get('team') as string;
 
 	const result = await vscode.window.showQuickPick(
-		teamService.getTeamMembers(projectName, teamName).then((users) => users.map((user) => user.displayName)),
+		teamService.getTeamMembers(projectName, teamName).then((users) => users.map((user) => user.identity!.displayName!)),
 		{
 			placeHolder: 'Choose A Column'
 		}
@@ -57,10 +58,10 @@ export const assignToAction = async (workItem: WorkItemItem): Promise<void | str
 };
 
 export const moveToBoardAction = async (workItem: WorkItemItem): Promise<void | string> => {
-	const columns: Column[] = workItem.getColumns();
+	const columns: BoardColumn[] = workItem.getColumns();
 
 	const result = await vscode.window.showQuickPick(
-		columns.map((c) => c.name),
+		columns.map((c) => c.name!),
 		{
 			placeHolder: 'Choose A Column'
 		}

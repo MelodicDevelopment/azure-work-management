@@ -10,7 +10,7 @@ export class ProjectService extends ApiBase {
 		return coreApi.getProjects();
 	}
 
-	async etTeamsForProject(projectID: string) {
+	async getTeamsForProject(projectID: string) {
 		const coreApi = await this.webApi.getCoreApi();
 		return coreApi.getTeams(projectID);
 	}
