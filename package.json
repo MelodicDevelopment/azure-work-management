@@ -1,217 +1,219 @@
 {
-	"name": "azure-work-management",
-	"displayName": "Azure Work Management",
-	"description": "Integrates Azure work items into VS Code.",
-	"publisher": "MelodicDevelopment",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/MelodicDevelopment/azure-work-management"
-	},
-	"author": {
-		"name": "Rick Hopkins",
-		"email": "rick@melodicdevelopment.com",
-		"url": "https://dev.to/melodicdevelopment"
-	},
-	"icon": "resources/azure-devops-128.png",
-	"version": "1.0.10",
-	"engines": {
-		"vscode": "^1.59.0"
-	},
-	"categories": [
-		"Other",
-		"Azure"
-	],
-	"keywords": [
-		"azure",
-		"work management",
-		"bug",
-		"work item",
-		"devops",
-		"boards"
-	],
-	"activationEvents": [
-		"onView:azure-work-management.open-boards",
-		"onView:azure-work-management.open-backlogs"
-	],
-	"main": "./dist/extension.js",
-	"contributes": {
-		"configuration": [
-			{
-				"title": "Azure Work Management",
-				"properties": {
-					"azure-work-management.serverUrl": {
-						"type": "string",
-						"default": "https://dev.azure.com/",
-						"description": "The url of the server where your Azure DevOps instance is hosted. Defaults to Azure DevOps Cloud Instance."
-					},
-					"azure-work-management.organization": {
-						"type": "string",
-						"default": null,
-						"description": "The Azure organization."
-					},
-					"azure-work-management.personalAccessToken": {
-						"type": "string",
-						"default": null,
-						"description": "The Azure personal access token."
-					},
-					"azure-work-management.project": {
-						"type": "string",
-						"default": null,
-						"description": "The Azure project."
-					},
-					"azure-work-management.team": {
-						"type": "string",
-						"default": null,
-						"description": "The Azure team."
-					},
-					"azure-work-management.iteration": {
-						"type": "string",
-						"default": null,
-						"description": "The iteration you would like to display work items for. You can run the Set Iteration command to get values to populate this setting."
-					}
-				}
-			}
-		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "azure-work-management-boards",
-					"title": "Azure Work Management",
-					"icon": "resources/azure-devops.svg"
-				}
-			]
-		},
-		"views": {
-			"azure-work-management-boards": [
-				{
-					"id": "azure-work-management.open-boards",
-					"name": "Boards",
-					"contextualTitle": "Boards",
-					"icon": "resources/azure-devops.svg"
-				},
-				{
-					"id": "azure-work-management.open-backlogs",
-					"name": "BackLogs",
-					"contextualTitle": "BackLogs",
-					"visibility": "collapsed"
-				}
-			]
-		},
-		"viewsWelcome": [
-			{
-				"view": "azure-work-management.open-boards",
-				"contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)\n[Set Iteration](command:azure-work-management.set-iteration)"
-			},
-			{
-				"view": "azure-work-management.open-backlogs",
-				"contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)\n[Set Iteration](command:azure-work-management.set-iteration)"
-			}
-		],
-		"commands": [
-			{
-				"command": "azure-work-management.open-config-settings",
-				"title": "Azure Work Management: Open Configuration Settings",
-				"icon": {
-					"light": "resources/light/settings.svg",
-					"dark": "resources/dark/settings.svg"
-				}
-			},
-			{
-				"command": "azure-work-management.refresh-boards",
-				"title": "Azure Work Management: Refresh Boards",
-				"icon": {
-					"light": "resources/light/refresh.svg",
-					"dark": "resources/dark/refresh.svg"
-				}
-			},
-			{
-				"command": "azure-work-management.refresh-backlogs",
-				"title": "Azure Work Management: Refresh Backlogs",
-				"icon": {
-					"light": "resources/light/refresh.svg",
-					"dark": "resources/dark/refresh.svg"
-				}
-			},
-			{
-				"command": "azure-work-management.set-iteration",
-				"title": "Azure Work Management: Set Iteration",
-				"icon": {
-					"light": "resources/light/iteration.svg",
-					"dark": "resources/dark/iteration.svg"
-				}
-			},
-			{
-				"command": "azure-work-management.edit-work-item",
-				"title": "Azure Work Management: Edit Work Item",
-				"icon": {
-					"light": "resources/light/edit.svg",
-					"dark": "resources/dark/edit.svg"
-				}
-			}
-		],
-		"menus": {
-			"view/title": [
-				{
-					"command": "azure-work-management.refresh-boards",
-					"when": "view == azure-work-management.open-boards",
-					"group": "navigation"
-				},
-				{
-					"command": "azure-work-management.set-iteration",
-					"when": "view == azure-work-management.open-boards",
-					"group": "navigation"
-				},
-				{
-					"command": "azure-work-management.open-config-settings",
-					"when": "view == azure-work-management.open-boards",
-					"group": "navigation"
-				},
-				{
-					"command": "azure-work-management.refresh-backlogs",
-					"when": "view == azure-work-management.open-backlogs",
-					"group": "navigation"
-				}
-			],
-			"view/item/context": [
-				{
-					"command": "azure-work-management.edit-work-item",
-					"when": "view == azure-work-management.open-boards && viewItem == workItem",
-					"group": "inline"
-				}
-			]
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run package",
-		"compile": "webpack",
-		"watch": "webpack --watch",
-		"package": "webpack --mode production --devtool hidden-source-map",
-		"test-compile": "tsc -p ./",
-		"test-watch": "tsc -watch -p ./",
-		"pretest": "npm run test-compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^8.1.0",
-		"@types/lodash": "^4.14.202",
-		"@types/mocha": "^10.0.6",
-		"@types/node": "^20.11.5",
-		"@types/vscode": "^1.85.0",
-		"@typescript-eslint/eslint-plugin": "^6.19.0",
-		"@typescript-eslint/parser": "^6.19.0",
-		"eslint": "^8.56.0",
-		"glob": "^7.1.7",
-		"mocha": "^10.2.0",
-		"ts-loader": "^9.5.1",
-		"typescript": "^5.3.3",
-		"vscode-test": "^1.6.1",
-		"webpack": "^5.89.0",
-		"webpack-cli": "^5.1.4"
-	},
-	"dependencies": {
-		"axios": "^0.21.1",
-		"azure-devops-node-api": "^12.4.0",
-		"lodash": "^4.17.21"
-	}
+  "name": "azure-work-management",
+  "displayName": "Azure Work Management",
+  "description": "Integrates Azure work items into VS Code.",
+  "publisher": "MelodicDevelopment",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MelodicDevelopment/azure-work-management"
+  },
+  "author": {
+    "name": "Rick Hopkins",
+    "email": "rick@melodicdevelopment.com",
+    "url": "https://dev.to/melodicdevelopment"
+  },
+  "icon": "resources/azure-devops-128.png",
+  "version": "1.0.10",
+  "engines": {
+    "vscode": "^1.59.0"
+  },
+  "categories": [
+    "Other",
+    "Azure"
+  ],
+  "keywords": [
+    "azure",
+    "work management",
+    "bug",
+    "work item",
+    "devops",
+    "boards"
+  ],
+  "activationEvents": [
+    "onView:azure-work-management.open-boards",
+    "onView:azure-work-management.open-backlogs"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": [
+      {
+        "title": "Azure Work Management",
+        "properties": {
+          "azure-work-management.serverUrl": {
+            "type": "string",
+            "default": "https://dev.azure.com/",
+            "description": "The url of the server where your Azure DevOps instance is hosted. Defaults to Azure DevOps Cloud Instance."
+          },
+          "azure-work-management.organization": {
+            "type": "string",
+            "default": null,
+            "description": "The Azure organization."
+          },
+          "azure-work-management.personalAccessToken": {
+            "type": "string",
+            "default": null,
+            "description": "The Azure personal access token."
+          },
+          "azure-work-management.project": {
+            "type": "string",
+            "default": null,
+            "description": "The Azure project."
+          },
+          "azure-work-management.team": {
+            "type": "string",
+            "default": null,
+            "description": "The Azure team."
+          },
+          "azure-work-management.iteration": {
+            "type": "string",
+            "default": null,
+            "description": "The iteration you would like to display work items for. You can run the Set Iteration command to get values to populate this setting."
+          }
+        }
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "azure-work-management-boards",
+          "title": "Azure Work Management",
+          "icon": "resources/azure-devops.svg"
+        }
+      ]
+    },
+    "views": {
+      "azure-work-management-boards": [
+        {
+          "id": "azure-work-management.open-boards",
+          "name": "Boards",
+          "contextualTitle": "Boards",
+          "icon": "resources/azure-devops.svg"
+        },
+        {
+          "id": "azure-work-management.open-backlogs",
+          "name": "BackLogs",
+          "contextualTitle": "BackLogs",
+          "visibility": "collapsed"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "azure-work-management.open-boards",
+        "contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)\n[Set Iteration](command:azure-work-management.set-iteration)"
+      },
+      {
+        "view": "azure-work-management.open-backlogs",
+        "contents": "In order to use the Azure Work Management extension you must set some default settings.\n[Open Settings](command:azure-work-management.open-config-settings)\n[Set Iteration](command:azure-work-management.set-iteration)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "azure-work-management.open-config-settings",
+        "title": "Azure Work Management: Open Configuration Settings",
+        "icon": {
+          "light": "resources/light/settings.svg",
+          "dark": "resources/dark/settings.svg"
+        }
+      },
+      {
+        "command": "azure-work-management.refresh-boards",
+        "title": "Azure Work Management: Refresh Boards",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "azure-work-management.refresh-backlogs",
+        "title": "Azure Work Management: Refresh Backlogs",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "azure-work-management.set-iteration",
+        "title": "Azure Work Management: Set Iteration",
+        "icon": {
+          "light": "resources/light/iteration.svg",
+          "dark": "resources/dark/iteration.svg"
+        }
+      },
+      {
+        "command": "azure-work-management.edit-work-item",
+        "title": "Azure Work Management: Edit Work Item",
+        "icon": {
+          "light": "resources/light/edit.svg",
+          "dark": "resources/dark/edit.svg"
+        }
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "azure-work-management.refresh-boards",
+          "when": "view == azure-work-management.open-boards",
+          "group": "navigation"
+        },
+        {
+          "command": "azure-work-management.set-iteration",
+          "when": "view == azure-work-management.open-boards",
+          "group": "navigation"
+        },
+        {
+          "command": "azure-work-management.open-config-settings",
+          "when": "view == azure-work-management.open-boards",
+          "group": "navigation"
+        },
+        {
+          "command": "azure-work-management.refresh-backlogs",
+          "when": "view == azure-work-management.open-backlogs",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "azure-work-management.edit-work-item",
+          "when": "view == azure-work-management.open-boards && viewItem == workItem",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "test-compile": "tsc -p ./",
+    "test-watch": "tsc -watch -p ./",
+    "pretest": "npm run test-compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "fix": "eslint --fix --ext .js,.ts -f stylish . && prettier --write .",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/lodash": "^4.14.202",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.5",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "glob": "^7.1.7",
+    "mocha": "^10.2.0",
+    "prettier": "3.2.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "vscode-test": "^1.6.1",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "azure-devops-node-api": "^12.4.0",
+    "lodash": "^4.17.21"
+  }
 }
