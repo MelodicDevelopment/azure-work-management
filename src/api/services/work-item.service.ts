@@ -1,23 +1,11 @@
-import { AxiosResponse } from 'axios';
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 import { chunk } from 'lodash';
-import { getAppSettings } from '../../services';
+import { getAppSettings, getTeamContext } from '../../services';
 import { ApiBase } from '../api-base.class';
 import { TeamFieldValue } from '../types';
-import { WiqlQueryResult } from '../types/wiql-query-result.type';
+import { JsonPatchDocument } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
 export class WorkItemService extends ApiBase {
-  protected get projectName(): string {
-    return encodeURI(getAppSettings().get('project') as string);
-  }
-  protected get teamName(): string {
-    return encodeURI(getAppSettings().get('team') as string);
-  }
-
-  constructor() {
-    super('_apis/wit');
-  }
-
   async queryForWorkItems(
     iterationPath: string,
     areaPath: TeamFieldValue[],
@@ -26,7 +14,7 @@ export class WorkItemService extends ApiBase {
   ) {
     const systemAreaPath: string = areaPath
       .map(
-        (ap: TeamFieldValue): string =>
+        (ap): string =>
           `[System.AreaPath] ${ap.includeChildren ? 'UNDER' : '='} '${ap.value}'`,
       )
       .join(' OR ');
@@ -38,11 +26,13 @@ export class WorkItemService extends ApiBase {
       query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = '${iterationPath}' AND (${systemAreaPath}) AND (${workItemType}) AND [System.BoardColumn] = '${boardColumn}' ORDER BY [State] Asc`,
     };
 
-    const response: AxiosResponse<WiqlQueryResult> = await this.axios.post(
-      `${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/wiql?${this.apiVersion}`,
-      data,
-    );
-    return this.getWorkItems(response.data.workItems.map((wi) => wi.id));
+    const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+    const workItems = await workItemTrackingApi.queryByWiql({
+      query: data.query
+    }, getTeamContext());
+
+    const ids = workItems.workItems?.map(workItem => workItem.id).filter((id): id is number => typeof id === 'number') ?? [];
+    return this.getWorkItems(ids);
   }
 
   async getWorkItems(ids: number[]) {
@@ -66,16 +56,8 @@ export class WorkItemService extends ApiBase {
     return result;
   }
 
-  async updateWorkItem(id: number, changes: unknown): Promise<WorkItem> {
-    const response = await this.axios.patch(
-      `${this.baseUrl}${this.organizationName}/${this.projectName}/${this.endPoint}/workitems/${id}?${this.apiVersion}`,
-      changes,
-      {
-        headers: {
-          'Content-Type': 'application/json-patch+json',
-        },
-      },
-    );
-    return response.data as WorkItem;
+  async updateWorkItem(id: number, changes: JsonPatchDocument): Promise<WorkItem> {
+	const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+	return await workItemTrackingApi.updateWorkItem({}, changes, id);
   }
 }

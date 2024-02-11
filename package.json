@@ -15,7 +15,7 @@
   "icon": "resources/azure-devops-128.png",
   "version": "1.0.10",
   "engines": {
-    "vscode": "^1.59.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Other",
@@ -212,7 +212,6 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "axios": "^0.21.1",
     "azure-devops-node-api": "^12.4.0",
     "lodash": "^4.17.21"
   }
