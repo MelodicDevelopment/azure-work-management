@@ -1,9 +1,9 @@
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
+import { JsonPatchDocument } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import { chunk } from 'lodash';
-import { getAppSettings, getTeamContext } from '../../services';
+import { getTeamContext } from '../../services';
 import { ApiBase } from '../api-base.class';
 import { TeamFieldValue } from '../types';
-import { JsonPatchDocument } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
 export class WorkItemService extends ApiBase {
   async queryForWorkItems(
@@ -57,7 +57,7 @@ export class WorkItemService extends ApiBase {
   }
 
   async updateWorkItem(id: number, changes: JsonPatchDocument): Promise<WorkItem> {
-	const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
-	return await workItemTrackingApi.updateWorkItem({}, changes, id);
+    const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+    return await workItemTrackingApi.updateWorkItem({}, changes, id);
   }
 }

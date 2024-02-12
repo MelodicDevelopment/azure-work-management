@@ -48,25 +48,23 @@ export const assignToAction = async (
   );
 
   if (result) {
-    return workItemService
-      .updateWorkItem(workItem.getWorkItemID(), [
-        {
-          op: 'test',
-          path: '/rev',
-          value: workItem.getWorkItemRev(),
-        },
-        {
-          op: 'add',
-          path: `/fields/System.AssignedTo`,
-          value: result as string,
-        },
-      ])
-      .then((_) => {
-        vscode.commands.executeCommand('azure-work-management.refresh-boards');
-        return vscode.window.showInformationMessage(
-          `Work item assigned to ${result}`,
-        );
-      });
+    await workItemService.updateWorkItem(workItem.getWorkItemID(), [
+      {
+        op: 'test',
+        path: '/rev',
+        value: workItem.getWorkItemRev(),
+      },
+      {
+        op: 'add',
+        path: `/fields/System.AssignedTo`,
+        value: result as string,
+      },
+    ]);
+
+    vscode.commands.executeCommand('azure-work-management.refresh-boards');
+    return vscode.window.showInformationMessage(
+      `Work item assigned to ${result}`,
+    );
   }
 };
 
@@ -84,24 +82,21 @@ export const moveToBoardAction = async (
 
   if (result) {
     const workItemService: WorkItemService = new WorkItemService();
-    return workItemService
-      .updateWorkItem(workItem.getWorkItemID(), [
-        {
-          op: 'test',
-          path: '/rev',
-          value: workItem.getWorkItemRev(),
-        },
-        {
-          op: 'add',
-          path: `/fields/${workItem.getBoardColumnFieldName()}`,
-          value: result as string,
-        },
-      ])
-      .then((_) => {
-        vscode.commands.executeCommand('azure-work-management.refresh-boards');
-        return vscode.window.showInformationMessage(
-          `Work item moved to ${result}`,
-        );
-      });
+    await workItemService.updateWorkItem(workItem.getWorkItemID(), [
+      {
+        op: 'test',
+        path: '/rev',
+        value: workItem.getWorkItemRev(),
+      },
+      {
+        op: 'add',
+        path: `/fields/${workItem.getBoardColumnFieldName()}`,
+        value: result as string,
+      },
+    ]);
+    vscode.commands.executeCommand('azure-work-management.refresh-boards');
+    return vscode.window.showInformationMessage(
+      `Work item moved to ${result}`,
+    );
   }
 };

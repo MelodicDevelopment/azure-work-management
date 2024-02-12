@@ -39,10 +39,9 @@ export function activate(context: vscode.ExtensionContext) {
     },
   );
 
-  vscode.commands.registerCommand('azure-work-management.set-iteration', () => {
-    setSystemAreaPaths(context.globalState).then(() => {
-      setCurrentIteration();
-    });
+  vscode.commands.registerCommand('azure-work-management.set-iteration', async () => {
+    await setSystemAreaPaths(context.globalState);
+    setCurrentIteration();
   });
 
   vscode.commands.registerCommand(
@@ -72,14 +71,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 const setCurrentIteration = async () => {
   const iterationService: IterationService = new IterationService();
-  const iterations = iterationService.getIterations().then((iterations) =>
-    iterations.map((iteration) => {
-      return {
-        label: `${iteration.name}:${iteration.attributes!.timeFrame}`,
-        data: iteration,
-      };
-    }),
-  );
+  const iterationsRaw = await iterationService.getIterations();
+  const iterations = iterationsRaw.map((iteration) => ({
+    label: `${iteration.name}:${iteration.attributes!.timeFrame}`,
+    data: iteration,
+  }));
 
   const result = await vscode.window.showQuickPick(iterations, {
     placeHolder: 'Choose An Iteration',
