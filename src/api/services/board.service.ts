@@ -1,7 +1,5 @@
+import { getAppSettings, getTeamContext } from '../../services';
 import { ApiBase } from '../api-base.class';
-import { Board, Column } from '../types';
-import { MultValueResponse } from '../types/multi-value-response.type';
-import { getAppSettings } from '../../services';
 
 export class BoardService extends ApiBase {
 	protected get projectName(): string {
@@ -11,21 +9,14 @@ export class BoardService extends ApiBase {
 		return encodeURI(getAppSettings().get('team') as string);
 	}
 
-	constructor() {
-		super('_apis/work/boards');
+	async getAll() {
+		const workApi = await this.webApi.getWorkApi();
+		return await workApi.getBoards(getTeamContext());
 	}
 
-	getAll(): Promise<Board[]> {
-		return this.axios.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}?${this.apiVersion}`).then((response) => {
-			return (response.data as MultValueResponse<Board>).value;
-		});
-	}
-
-	getColumns(boardID: string): Promise<Column[]> {
-		return this.axios
-			.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/${boardID}/columns?${this.apiVersion}`)
-			.then((response) => {
-				return (response.data as MultValueResponse<Column>).value;
-			});
+	async getColumns(boardID: string) {
+		const workApi = await this.webApi.getWorkApi();
+		const board = await workApi.getBoard(getTeamContext(), boardID);
+		return board.columns!;
 	}
 }

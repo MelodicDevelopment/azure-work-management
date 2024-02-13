@@ -1,60 +1,87 @@
 import * as vscode from 'vscode';
-import { IterationService, TeamFieldValuesService } from './api/services';
-import { Iteration, TeamFieldValues } from './api/types';
-import { WorkItemItem } from './tree-items';
-import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 import { chooseAction } from './actions/work-item-edit.actions';
+import { IterationService, TeamFieldValuesService } from './api/services';
 import { getAppSettings } from './services';
+import { WorkItemItem } from './tree-items';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
+import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 
 export function activate(context: vscode.ExtensionContext) {
 	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(context);
-	const backlogTreeProvider: BacklogTreeProvider = new BacklogTreeProvider(context);
-
-	vscode.window.registerTreeDataProvider('azure-work-management.open-boards', boardTreeProvider);
-	vscode.window.registerTreeDataProvider('azure-work-management.open-backlogs', backlogTreeProvider);
-
-	vscode.commands.registerCommand('azure-work-management.refresh-boards', () => boardTreeProvider.refresh());
-	vscode.commands.registerCommand('azure-work-management.refresh-backlogs', () => backlogTreeProvider.refresh());
-
-	vscode.commands.registerCommand('azure-work-management.open-config-settings', () => {
-		vscode.commands.executeCommand('workbench.action.openSettings', 'azure-work-management');
-	});
-
-	vscode.commands.registerCommand('azure-work-management.set-iteration', () => {
-		setSystemAreaPaths(context.globalState).then(() => {
-			setCurrentIteration();
-		});
-	});
-
-	vscode.commands.registerCommand('azure-work-management.open-work-item', (workItem: WorkItemItem) => {
-		const organizationName: string = encodeURI(getAppSettings().get('organization') as string);
-		const projectName: string = encodeURI(getAppSettings().get('project') as string);
-		vscode.env.openExternal(vscode.Uri.parse(`${getAppSettings().get('serverUrl')}${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`));
-	});
-
-	vscode.commands.registerCommand('azure-work-management.edit-work-item', (workItem: WorkItemItem) => {
-		chooseAction(workItem);
-	});
-}
-
-interface IQuickPickItem<T> extends vscode.QuickPickItem {
-	data: T;
-}
-
-const setCurrentIteration = async (): Promise<void> => {
-	const iterationService: IterationService = new IterationService();
-	const iterations = iterationService.getIterations().then((iterations) =>
-		iterations.map((iteration) => {
-			return {
-				label: `${iteration.name}:${iteration.attributes.timeFrame}`,
-				data: iteration
-			} as IQuickPickItem<Iteration>;
-		})
+	const backlogTreeProvider: BacklogTreeProvider = new BacklogTreeProvider(
+		context,
 	);
 
+	vscode.window.registerTreeDataProvider(
+		'azure-work-management.open-boards',
+		boardTreeProvider,
+	);
+	vscode.window.registerTreeDataProvider(
+		'azure-work-management.open-backlogs',
+		backlogTreeProvider,
+	);
+
+	vscode.commands.registerCommand('azure-work-management.refresh-boards', () =>
+		boardTreeProvider.refresh(),
+	);
+	vscode.commands.registerCommand(
+		'azure-work-management.refresh-backlogs',
+		() => backlogTreeProvider.refresh(),
+	);
+
+	vscode.commands.registerCommand(
+		'azure-work-management.open-config-settings',
+		() => {
+			vscode.commands.executeCommand(
+				'workbench.action.openSettings',
+				'azure-work-management',
+			);
+		},
+	);
+
+	vscode.commands.registerCommand(
+		'azure-work-management.set-iteration',
+		async () => {
+			await setSystemAreaPaths(context.globalState);
+			setCurrentIteration();
+		},
+	);
+
+	vscode.commands.registerCommand(
+		'azure-work-management.open-work-item',
+		(workItem: WorkItemItem) => {
+			const organizationName: string = encodeURI(
+				getAppSettings().get('organization') as string,
+			);
+			const projectName: string = encodeURI(
+				getAppSettings().get('project') as string,
+			);
+			vscode.env.openExternal(
+				vscode.Uri.parse(
+					`${getAppSettings().get('serverUrl')}${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`,
+				),
+			);
+		},
+	);
+
+	vscode.commands.registerCommand(
+		'azure-work-management.edit-work-item',
+		(workItem: WorkItemItem) => {
+			chooseAction(workItem);
+		},
+	);
+}
+
+const setCurrentIteration = async () => {
+	const iterationService: IterationService = new IterationService();
+	const iterationsRaw = await iterationService.getIterations();
+	const iterations = iterationsRaw.map((iteration) => ({
+		label: `${iteration.name}:${iteration.attributes!.timeFrame}`,
+		data: iteration,
+	}));
+
 	const result = await vscode.window.showQuickPick(iterations, {
-		placeHolder: 'Choose An Iteration'
+		placeHolder: 'Choose An Iteration',
 	});
 
 	if (result) {
@@ -66,8 +93,13 @@ const setCurrentIteration = async (): Promise<void> => {
 	}, 1000);
 };
 
-const setSystemAreaPaths = (globalState: vscode.Memento): Promise<void> => {
+const setSystemAreaPaths = async (globalState: vscode.Memento) => {
 	globalState.update('system-area-path', null);
-	const teamFieldValuesService: TeamFieldValuesService = new TeamFieldValuesService();
-	return teamFieldValuesService.getTeamFieldValues().then((teamFields: TeamFieldValues): Thenable<void> => globalState.update('system-area-path', JSON.stringify([...teamFields.values])));
+	const teamFieldValuesService: TeamFieldValuesService =
+		new TeamFieldValuesService();
+	const teamFields = await teamFieldValuesService.getTeamFieldValues();
+	globalState.update(
+		'system-area-path',
+		JSON.stringify([...(teamFields.values ?? [])]),
+	);
 };

@@ -1,9 +1,6 @@
-import { ApiBase } from '../api-base.class';
-import { BackLog } from '../types/backlog.type';
-import { MultValueResponse } from '../types/multi-value-response.type';
-import { getAppSettings } from '../../services';
-import { BacklogWorkItemResponse, WorkItem } from '..';
 import { WorkItemService } from '.';
+import { getAppSettings, getTeamContext } from '../../services';
+import { ApiBase } from '../api-base.class';
 
 export class BacklogService extends ApiBase {
 	private _workItemService: WorkItemService = new WorkItemService();
@@ -17,22 +14,20 @@ export class BacklogService extends ApiBase {
 
 	protected apiVersion: string = 'api-version=6.1-preview.1';
 
-	constructor() {
-		super('_apis/work/backlogs');
+	async getBacklogs() {
+		const workApi = await this.webApi.getWorkApi();
+		return workApi.getBacklogs(getTeamContext());
 	}
 
-	getBacklogs(): Promise<BackLog[]> {
-		return this.axios.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}?${this.apiVersion}`).then((response) => {
-			return (response.data as MultValueResponse<BackLog>).value;
-		});
-	}
-
-	getBacklogWorkItems(backlogID: string): Promise<WorkItem[]> {
-		return this.axios
-			.get(`${this.baseUrl}${this.organizationName}/${this.projectName}/${this.teamName}/${this.endPoint}/${backlogID}/workitems?${this.apiVersion}`)
-			.then((response) => {
-				const workItemIDs: number[] = (response.data as BacklogWorkItemResponse).workItems.map((wi) => wi.target.id);
-				return this._workItemService.getWorkItems(workItemIDs);
-			});
+	async getBacklogWorkItems(backlogID: string) {
+		const workApi = await this.webApi.getWorkApi();
+		const workItems = await workApi.getBacklogLevelWorkItems(
+			getTeamContext(),
+			backlogID,
+		);
+		const ids = (workItems.workItems ?? [])
+			.map((workItemID) => workItemID.target?.id)
+			.filter((id): id is number => typeof id === 'number');
+		return this._workItemService.getWorkItems(ids);
 	}
 }
