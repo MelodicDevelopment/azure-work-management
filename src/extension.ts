@@ -75,8 +75,16 @@ export function activate(context: vscode.ExtensionContext) {
 const setCurrentIteration = async () => {
 	const iterationService: IterationService = new IterationService();
 	const iterationsRaw = await iterationService.getIterations();
+
+	const iterationTimeframes = {
+		0: 'Past',
+		1: 'Current',
+		2: 'Future',
+		3: 'Unknown',
+	};
+
 	const iterations = iterationsRaw.map((iteration) => ({
-		label: `${iteration.name}:${iteration.attributes!.timeFrame}`,
+		label: `${iteration.name}:${iterationTimeframes[iteration.attributes!.timeFrame ?? 3]}`,
 		data: iteration,
 	}));
 
