@@ -15,7 +15,7 @@
 	"icon": "resources/azure-devops-128.png",
 	"version": "1.0.11",
 	"engines": {
-		"vscode": "^1.75.0"
+		"vscode": "^1.85.0"
 	},
 	"categories": [
 		"Other",
