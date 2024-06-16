@@ -1,17 +1,16 @@
 import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as vscode from 'vscode';
-import { TeamFieldValue } from '../api/types/team-field-values.type';
 import { BoardService } from '../api/services/board.service';
+import { TeamFieldValue } from '../api/types/team-field-values.type';
 
+import { WorkItemService } from '../api/services/work-item.service';
+import {
+	AppSettingsService,
+	getIteration
+} from '../services/app-settings.service';
 import { BoardItem } from '../tree-items/board-item.class';
 import { ColumnItem } from '../tree-items/column-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
-import { WorkItemService } from '../api/services/work-item.service';
-import {
-	getAppSettings,
-	getIteration,
-	isValidAppSettings,
-} from '../services/app-settings.service';
 
 export class BoardsTreeProvider
 	implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -24,6 +23,7 @@ export class BoardsTreeProvider
 
 	constructor(
 		private _context: vscode.ExtensionContext,
+		private _appSettingsService: AppSettingsService,
 		private _boardService: BoardService,
 		private _workItemService: WorkItemService,
 	) {}
@@ -34,14 +34,14 @@ export class BoardsTreeProvider
 
 	getTreeItem(
 		element: vscode.TreeItem,
-	): vscode.TreeItem | Thenable<vscode.TreeItem> {
+	) {
 		return element;
 	}
 
 	getChildren(
 		element?: vscode.TreeItem,
 	): vscode.ProviderResult<vscode.TreeItem[]> {
-		if (isValidAppSettings()) {
+		if (this._appSettingsService.isValidAppSettings()) {
 			const contextValueGetters: {
 				[key: string]: () => Promise<vscode.TreeItem[]>;
 			} = {

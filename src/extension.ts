@@ -6,23 +6,26 @@ import { IterationService } from './api/services/iteration.service';
 import { TeamFieldValuesService } from './api/services/team-field-values.service';
 import { TeamService } from './api/services/team.service';
 import { WorkItemService } from './api/services/work-item.service';
-import { getAppSettings } from './services/app-settings.service';
+import { AppSettingsService, getAppSettings } from './services/app-settings.service';
 import { WorkItemItem } from './tree-items';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
 import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 
 export function activate(context: vscode.ExtensionContext) {
+	const appSettingsService = new AppSettingsService();
 	const workItemService = new WorkItemService();
 	const backlogService = new BacklogService(workItemService);
 	const boardService = new BoardService();
 	const teamService = new TeamService();
 	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(
 		context,
+		appSettingsService,
 		boardService,
 		workItemService,
 	);
 	const backlogTreeProvider: BacklogTreeProvider = new BacklogTreeProvider(
 		context,
+		appSettingsService,
 		backlogService,
 	);
 

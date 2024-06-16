@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { BacklogService } from '../api/services/backlog.service';
-import { isValidAppSettings } from '../services/app-settings.service';
+import { AppSettingsService } from '../services/app-settings.service';
 import { BacklogItem } from '../tree-items/backlog-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
 
@@ -15,6 +15,7 @@ export class BacklogTreeProvider
 
 	constructor(
 		private _context: vscode.ExtensionContext,
+		private _appSettingsService: AppSettingsService,
 		private _backlogService: BacklogService,
 	) {}
 
@@ -31,7 +32,7 @@ export class BacklogTreeProvider
 	getChildren(
 		element?: vscode.TreeItem,
 	): vscode.ProviderResult<vscode.TreeItem[]> {
-		if (isValidAppSettings()) {
+		if (this._appSettingsService.isValidAppSettings()) {
 			const contextValueGetters: {
 				[key: string]: () => Promise<vscode.TreeItem[]>;
 			} = {
