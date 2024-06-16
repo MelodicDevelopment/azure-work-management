@@ -6,10 +6,7 @@ import { IterationService } from './api/services/iteration.service';
 import { TeamFieldValuesService } from './api/services/team-field-values.service';
 import { TeamService } from './api/services/team.service';
 import { WorkItemService } from './api/services/work-item.service';
-import {
-	AppSettingsService,
-	getAppSettings,
-} from './services/app-settings.service';
+import { AppSettingsService } from './services/app-settings.service';
 import { WorkItemItem } from './tree-items';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
 import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
@@ -68,7 +65,7 @@ export function activate(context: vscode.ExtensionContext) {
 		'azure-work-management.set-iteration',
 		async () => {
 			await setSystemAreaPaths(context.globalState, teamFieldValuesService);
-			setCurrentIteration(iterationService);
+			setCurrentIteration(appSettingsService, iterationService);
 		},
 	);
 
@@ -76,14 +73,12 @@ export function activate(context: vscode.ExtensionContext) {
 		'azure-work-management.open-work-item',
 		(workItem: WorkItemItem) => {
 			const organizationName: string = encodeURI(
-				getAppSettings().get('organization') as string,
+				appSettingsService.getOrganization(),
 			);
-			const projectName: string = encodeURI(
-				getAppSettings().get('project') as string,
-			);
+			const projectName: string = encodeURI(appSettingsService.getProject());
 			vscode.env.openExternal(
 				vscode.Uri.parse(
-					`${getAppSettings().get('serverUrl')}${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`,
+					`${appSettingsService.getServerUrl()}${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`,
 				),
 			);
 		},
@@ -92,12 +87,19 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand(
 		'azure-work-management.edit-work-item',
 		(workItem: WorkItemItem) => {
-			chooseAction(workItem, { workItemService, teamService });
+			chooseAction(workItem, {
+				appSettingsService,
+				workItemService,
+				teamService,
+			});
 		},
 	);
 }
 
-const setCurrentIteration = async (iterationService: IterationService) => {
+const setCurrentIteration = async (
+	appSettingsService: AppSettingsService,
+	iterationService: IterationService,
+) => {
 	const iterationsRaw = await iterationService.getIterations();
 
 	const iterationTimeframes = {
@@ -117,7 +119,9 @@ const setCurrentIteration = async (iterationService: IterationService) => {
 	});
 
 	if (result) {
-		getAppSettings().update('iteration', result.data.path, true);
+		appSettingsService
+			.getAppSettings()
+			.update('iteration', result.data.path, true);
 	}
 
 	setTimeout(() => {

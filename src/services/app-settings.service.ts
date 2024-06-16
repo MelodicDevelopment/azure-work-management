@@ -6,15 +6,17 @@ export class AppSettingsService {
 	}
 
 	public getServerUrl() {
-		return encodeURI(getAppSettings().get('serverUrl') as string);
+		return encodeURI(this.getAppSettings().get('serverUrl') as string);
 	}
 
 	public getPersonalAccessToken() {
-		return encodeURI(getAppSettings().get('personalAccessToken') as string);
+		return encodeURI(
+			this.getAppSettings().get('personalAccessToken') as string,
+		);
 	}
 
 	public getOrganization() {
-		return encodeURI(getAppSettings().get('organization') as string);
+		return encodeURI(this.getAppSettings().get('organization') as string);
 	}
 
 	public getIteration() {
@@ -22,11 +24,11 @@ export class AppSettingsService {
 	}
 
 	public getProject() {
-		return getAppSettings().get('project') as string;
+		return this.getAppSettings().get('project') as string;
 	}
 
 	public getTeam() {
-		return getAppSettings().get('team') as string;
+		return this.getAppSettings().get('team') as string;
 	}
 
 	public getTeamContext() {
@@ -37,31 +39,17 @@ export class AppSettingsService {
 	}
 
 	public isValidAppSettings() {
-		const serverUrl: string = getAppSettings().get('serverUrl') as string;
-		const organization: string = getAppSettings().get('organization') as string;
-		const personalAccessToken: string = getAppSettings().get(
-			'personalAccessToken',
-		) as string;
-		const project: string = getAppSettings().get('project') as string;
-		const team: string = getAppSettings().get('team') as string;
-		const iteration: string = getAppSettings().get('iteration') as string;
-
 		if (
-			serverUrl &&
-			organization &&
-			personalAccessToken &&
-			project &&
-			team &&
-			iteration
+			this.getServerUrl() &&
+			this.getOrganization() &&
+			this.getPersonalAccessToken() &&
+			this.getProject() &&
+			this.getTeam() &&
+			this.getIteration()
 		) {
 			return true;
+		} else {
+			return false;
 		}
-
-		return false;
 	}
 }
-
-export const getAppSettings = (): vscode.WorkspaceConfiguration =>
-	vscode.workspace.getConfiguration('azure-work-management');
-export const getOrganization = () =>
-	encodeURI(getAppSettings().get('organization') as string);

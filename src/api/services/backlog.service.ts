@@ -1,8 +1,5 @@
 import { getWebApi } from '../../services/api.service';
-import {
-	AppSettingsService,
-	getAppSettings,
-} from '../../services/app-settings.service';
+import { AppSettingsService } from '../../services/app-settings.service';
 import { WorkItemService } from './work-item.service';
 
 export class BacklogService {
@@ -10,15 +7,6 @@ export class BacklogService {
 		private _appSettingsService: AppSettingsService,
 		private _workItemService: WorkItemService,
 	) {}
-
-	protected get projectName(): string {
-		return encodeURI(getAppSettings().get('project') as string);
-	}
-	protected get teamName(): string {
-		return encodeURI(getAppSettings().get('team') as string);
-	}
-
-	protected apiVersion: string = 'api-version=6.1-preview.1';
 
 	async getBacklogs() {
 		const workApi = await getWebApi(this._appSettingsService).getWorkApi();

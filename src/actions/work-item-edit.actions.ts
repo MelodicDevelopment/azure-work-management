@@ -1,13 +1,14 @@
 import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as vscode from 'vscode';
 import { TeamService } from '../api/services/team.service';
-import { getAppSettings } from '../services/app-settings.service';
 import { WorkItemItem } from '../tree-items';
 import { WorkItemService } from '../api/services/work-item.service';
+import { AppSettingsService } from '../services/app-settings.service';
 
 export const chooseAction = async (
 	workItem: WorkItemItem,
 	services: {
+		appSettingsService: AppSettingsService;
 		workItemService: WorkItemService;
 		teamService: TeamService;
 	},
@@ -38,15 +39,17 @@ export const chooseAction = async (
 export const assignToAction = async (
 	workItem: WorkItemItem,
 	{
+		appSettingsService,
 		workItemService,
 		teamService,
 	}: {
+		appSettingsService: AppSettingsService;
 		workItemService: WorkItemService;
 		teamService: TeamService;
 	},
 ): Promise<void | string> => {
-	const projectName: string = getAppSettings().get('project') as string;
-	const teamName: string = getAppSettings().get('team') as string;
+	const projectName: string = appSettingsService.getProject();
+	const teamName: string = appSettingsService.getTeam();
 
 	const result = await vscode.window.showQuickPick(
 		teamService

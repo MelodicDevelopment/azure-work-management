@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import { BoardService } from '../../../api/services/board.service';
 import { WorkItemService } from '../../../api/services/work-item.service';
 import { BoardsTreeProvider } from '../../../tree-providers';
+import { AppSettingsService } from '../../../services/app-settings.service';
 
 suite('BoardTreeProvider', () => {
 	test('invalid configuration returns empty list', () => {
@@ -26,7 +27,19 @@ suite('BoardTreeProvider', () => {
 			isValidAppSettings() {
 				return false;
 			},
-		};
+			getServerUrl() {
+				return 'test-url';
+			},
+			getPersonalAccessToken() {
+				return 'test-token';
+			},
+			getOrganization() {
+				return 'test-organization';
+			},
+			getIteration() {
+				return 'test-iteration';
+			},
+		} as AppSettingsService;
 		const boardService = {} as BoardService;
 		const workItemService = {} as WorkItemService;
 		const subject = new BoardsTreeProvider(
