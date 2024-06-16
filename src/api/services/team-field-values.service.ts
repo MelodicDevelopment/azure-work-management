@@ -1,9 +1,9 @@
-import { getAppSettings, getTeamContext } from '../../services';
-import { ApiBase } from '../api-base.class';
+import { getWebApi } from '../../services/api.service';
+import { getTeamContext } from '../../services/app-settings.service';
 
-export class TeamFieldValuesService extends ApiBase {
+export class TeamFieldValuesService {
 	async getTeamFieldValues() {
-		const workApi = await this.webApi.getWorkApi();
+		const workApi = await getWebApi().getWorkApi();
 		return await workApi.getTeamFieldValues(getTeamContext());
 	}
 }

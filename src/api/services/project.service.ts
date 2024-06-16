@@ -1,13 +1,14 @@
-import { ApiBase } from '../api-base.class';
+import { getWebApi } from '../../services/api.service';
 
-export class ProjectService extends ApiBase {
+
+export class ProjectService {
 	async getProjects() {
-		const coreApi = await this.webApi.getCoreApi();
+		const coreApi = await getWebApi().getCoreApi();
 		return coreApi.getProjects();
 	}
 
 	async getTeamsForProject(projectID: string) {
-		const coreApi = await this.webApi.getCoreApi();
+		const coreApi = await getWebApi().getCoreApi();
 		return coreApi.getTeams(projectID);
 	}
 }

@@ -1,11 +1,13 @@
 import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as vscode from 'vscode';
-import { TeamFieldValue } from '../api';
-import { BoardService, WorkItemService } from '../api/services';
-import { getAppSettings, isValidAppSettings } from '../services';
+import { TeamFieldValue } from '../api/types/team-field-values.type';
+import { BoardService } from '../api/services/board.service';
+
 import { BoardItem } from '../tree-items/board-item.class';
 import { ColumnItem } from '../tree-items/column-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
+import { WorkItemService } from '../api/services/work-item.service';
+import { getAppSettings, getIteration, isValidAppSettings } from '../services/app-settings.service';
 
 export class BoardsTreeProvider
 	implements vscode.TreeDataProvider<vscode.TreeItem>
@@ -73,7 +75,7 @@ export class BoardsTreeProvider
 	}
 
 	private async getWorkItems(element: ColumnItem) {
-		const iterationPath: string = getAppSettings().get('iteration') as string;
+		const iterationPath: string = getIteration();
 		const systemAreaPaths: TeamFieldValue[] = JSON.parse(
 			this._context.globalState.get('system-area-path') as string,
 		);

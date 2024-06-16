@@ -1,7 +1,11 @@
 import * as vscode from 'vscode';
 import { chooseAction } from './actions/work-item-edit.actions';
-import { BacklogService, BoardService, IterationService, TeamFieldValuesService, WorkItemService } from './api/services';
-import { getAppSettings } from './services';
+import { BacklogService } from './api/services/backlog.service';
+import { BoardService } from './api/services/board.service';
+import { IterationService } from './api/services/iteration.service';
+import { TeamFieldValuesService } from './api/services/team-field-values.service';
+import { WorkItemService } from './api/services/work-item.service';
+import { getAppSettings } from './services/app-settings.service';
 import { WorkItemItem } from './tree-items';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
 import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
@@ -11,12 +15,13 @@ export function activate(context: vscode.ExtensionContext) {
 	const workItemService = new WorkItemService();
 	const boardService = new BoardService();
 	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(
-		context, 
-		boardService, 
-		workItemService);
+		context,
+		boardService,
+		workItemService,
+	);
 	const backlogTreeProvider: BacklogTreeProvider = new BacklogTreeProvider(
-		context, 
-		backlogService
+		context,
+		backlogService,
 	);
 
 	vscode.window.registerTreeDataProvider(

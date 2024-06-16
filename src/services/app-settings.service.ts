@@ -4,6 +4,9 @@ export const getAppSettings = (): vscode.WorkspaceConfiguration =>
 	vscode.workspace.getConfiguration('azure-work-management');
 export const getProject = () => getAppSettings().get('project') as string;
 export const getTeam = () => getAppSettings().get('team') as string;
+export const getOrganization = () =>
+	encodeURI(getAppSettings().get('organization') as string);
+export const getIteration = () => getAppSettings().get('iteration') as string;
 export const getTeamContext = () => ({
 	project: getProject(),
 	team: getTeam(),

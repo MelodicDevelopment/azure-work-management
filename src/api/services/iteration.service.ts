@@ -1,14 +1,15 @@
-import { getTeamContext } from '../../services';
-import { ApiBase } from '../api-base.class';
+import { getWebApi } from '../../services/api.service';
+import { getTeamContext } from '../../services/app-settings.service';
 
-export class IterationService extends ApiBase {
+
+export class IterationService {
 	async getIterations() {
-		const workApi = await this.webApi.getWorkApi();
+		const workApi = await getWebApi().getWorkApi();
 		return workApi.getTeamIterations(getTeamContext());
 	}
 
 	async getCurrentIteration() {
-		const workApi = await this.webApi.getWorkApi();
+		const workApi = await getWebApi().getWorkApi();
 		return workApi.getTeamIterations(getTeamContext(), 'current');
 	}
 }

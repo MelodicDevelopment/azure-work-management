@@ -1,8 +1,9 @@
 import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as vscode from 'vscode';
-import { TeamService, WorkItemService } from '../api';
+import { TeamService } from '../api/services/team.service';
 import { getAppSettings } from '../services/app-settings.service';
 import { WorkItemItem } from '../tree-items';
+import { WorkItemService } from '../api/services/work-item.service';
 
 export const chooseAction = async (
 	workItem: WorkItemItem,

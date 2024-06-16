@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { BacklogService } from '../api';
-import { isValidAppSettings } from '../services';
+import { BacklogService } from '../api/services/backlog.service';
+import { isValidAppSettings } from '../services/app-settings.service';
 import { BacklogItem } from '../tree-items/backlog-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
 
@@ -15,7 +15,7 @@ export class BacklogTreeProvider
 
 	constructor(
 		private _context: vscode.ExtensionContext,
-		private _backlogService: BacklogService
+		private _backlogService: BacklogService,
 	) {}
 
 	refresh(): void {

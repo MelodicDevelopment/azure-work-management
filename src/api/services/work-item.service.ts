@@ -1,11 +1,12 @@
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 import { JsonPatchDocument } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import { chunk } from 'lodash';
-import { getTeamContext } from '../../services';
-import { ApiBase } from '../api-base.class';
+import { getTeamContext } from '../../services/app-settings.service';
+
+import { getWebApi } from '../../services/api.service';
 import { TeamFieldValue } from '../types';
 
-export class WorkItemService extends ApiBase {
+export class WorkItemService {
 	async queryForWorkItems(
 		iterationPath: string,
 		areaPath: TeamFieldValue[],
@@ -26,7 +27,7 @@ export class WorkItemService extends ApiBase {
 			query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = '${iterationPath}' AND (${systemAreaPath}) AND (${workItemType}) AND [System.BoardColumn] = '${boardColumn}' ORDER BY [State] Asc`,
 		};
 
-		const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi().getWorkItemTrackingApi();
 		const workItems = await workItemTrackingApi.queryByWiql(
 			{
 				query: data.query,
@@ -46,7 +47,7 @@ export class WorkItemService extends ApiBase {
 			return [];
 		}
 
-		const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi().getWorkItemTrackingApi();
 		const chunks = chunk(ids, 200);
 
 		const result: WorkItem[] = [];
@@ -66,7 +67,7 @@ export class WorkItemService extends ApiBase {
 		id: number,
 		changes: JsonPatchDocument,
 	): Promise<WorkItem> {
-		const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi().getWorkItemTrackingApi();
 		return await workItemTrackingApi.updateWorkItem({}, changes, id);
 	}
 }
