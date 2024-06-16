@@ -2,6 +2,20 @@ import * as vscode from 'vscode';
 
 export class AppSettingsService {
 
+	public getProject() {
+		return getAppSettings().get('project') as string;
+	}
+	public getTeam() {
+		return getAppSettings().get('team') as string;
+	}
+
+	public getTeamContext() {
+		return {
+			project: this.getProject(),
+			team: this.getTeam(),
+		};
+	}
+
 	public isValidAppSettings() {
 		const serverUrl: string = getAppSettings().get('serverUrl') as string;
 		const organization: string = getAppSettings().get('organization') as string;
@@ -29,13 +43,8 @@ export class AppSettingsService {
 
 export const getAppSettings = (): vscode.WorkspaceConfiguration =>
 	vscode.workspace.getConfiguration('azure-work-management');
-export const getProject = () => getAppSettings().get('project') as string;
-export const getTeam = () => getAppSettings().get('team') as string;
 export const getOrganization = () =>
 	encodeURI(getAppSettings().get('organization') as string);
 export const getIteration = () => getAppSettings().get('iteration') as string;
-export const getTeamContext = () => ({
-	project: getProject(),
-	team: getTeam(),
-});
+
 

@@ -11,6 +11,18 @@ suite('BoardTreeProvider', () => {
 	test('invalid configuration returns empty list', () => {
         const context = {} as vscode.ExtensionContext;
         const appSettingsService = {
+            getProject() {
+                return "test-project";
+            },
+            getTeam() {
+                return "test-team";
+            },
+            getTeamContext() {
+                return {
+                    project: this.getProject(),
+                    team: this.getTeam(),
+                };
+            },
             isValidAppSettings() {
                 return false;
             }

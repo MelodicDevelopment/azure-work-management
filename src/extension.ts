@@ -13,10 +13,12 @@ import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 
 export function activate(context: vscode.ExtensionContext) {
 	const appSettingsService = new AppSettingsService();
-	const workItemService = new WorkItemService();
-	const backlogService = new BacklogService(workItemService);
-	const boardService = new BoardService();
-	const teamService = new TeamService();
+	const workItemService = new WorkItemService(appSettingsService);
+	const backlogService = new BacklogService(appSettingsService, workItemService);
+	const boardService = new BoardService(appSettingsService);
+	const iterationService = new IterationService(appSettingsService);
+	const teamService = new TeamService(appSettingsService);
+	const teamFieldValuesService = new TeamFieldValuesService(appSettingsService);
 	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(
 		context,
 		appSettingsService,
@@ -59,8 +61,8 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand(
 		'azure-work-management.set-iteration',
 		async () => {
-			await setSystemAreaPaths(context.globalState);
-			setCurrentIteration();
+			await setSystemAreaPaths(context.globalState, teamFieldValuesService);
+			setCurrentIteration(iterationService);
 		},
 	);
 
@@ -89,8 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 }
 
-const setCurrentIteration = async () => {
-	const iterationService: IterationService = new IterationService();
+const setCurrentIteration = async (iterationService: IterationService) => {
 	const iterationsRaw = await iterationService.getIterations();
 
 	const iterationTimeframes = {
@@ -118,10 +119,8 @@ const setCurrentIteration = async () => {
 	}, 1000);
 };
 
-const setSystemAreaPaths = async (globalState: vscode.Memento) => {
+const setSystemAreaPaths = async (globalState: vscode.Memento, teamFieldValuesService: TeamFieldValuesService) => {
 	globalState.update('system-area-path', null);
-	const teamFieldValuesService: TeamFieldValuesService =
-		new TeamFieldValuesService();
 	const teamFields = await teamFieldValuesService.getTeamFieldValues();
 	globalState.update(
 		'system-area-path',

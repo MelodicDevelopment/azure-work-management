@@ -1,12 +1,12 @@
 import { getWebApi } from '../../services/api.service';
 import {
+	AppSettingsService,
 	getAppSettings,
-	getTeamContext,
 } from '../../services/app-settings.service';
 import { WorkItemService } from './work-item.service';
 
 export class BacklogService {
-	constructor(private _workItemService: WorkItemService) {}
+	constructor(private _appSettingsService: AppSettingsService, private _workItemService: WorkItemService) {}
 
 	protected get projectName(): string {
 		return encodeURI(getAppSettings().get('project') as string);
@@ -19,13 +19,13 @@ export class BacklogService {
 
 	async getBacklogs() {
 		const workApi = await getWebApi().getWorkApi();
-		return workApi.getBacklogs(getTeamContext());
+		return workApi.getBacklogs(this._appSettingsService.getTeamContext());
 	}
 
 	async getBacklogWorkItems(backlogID: string) {
 		const workApi = await getWebApi().getWorkApi();
 		const workItems = await workApi.getBacklogLevelWorkItems(
-			getTeamContext(),
+			this._appSettingsService.getTeamContext(),
 			backlogID,
 		);
 		const ids = (workItems.workItems ?? [])

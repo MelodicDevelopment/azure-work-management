@@ -1,12 +1,14 @@
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 import { JsonPatchDocument } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import { chunk } from 'lodash';
-import { getTeamContext } from '../../services/app-settings.service';
+import { AppSettingsService } from '../../services/app-settings.service';
 
 import { getWebApi } from '../../services/api.service';
 import { TeamFieldValue } from '../types';
 
 export class WorkItemService {
+	constructor(private _appSettingsService: AppSettingsService) {}
+
 	async queryForWorkItems(
 		iterationPath: string,
 		areaPath: TeamFieldValue[],
@@ -32,7 +34,7 @@ export class WorkItemService {
 			{
 				query: data.query,
 			},
-			getTeamContext(),
+			this._appSettingsService.getTeamContext(),
 		);
 
 		const ids =

@@ -1,10 +1,11 @@
 import { getWebApi } from '../../services/api.service';
-import { getProject } from '../../services/app-settings.service';
+import { AppSettingsService } from '../../services/app-settings.service';
 
 export class TeamService {
+	constructor(private _appSettingsService: AppSettingsService) {}
 	async getTeams() {
 		const coreApi = await getWebApi().getCoreApi();
-		return await coreApi.getTeams(getProject());
+		return await coreApi.getTeams(this._appSettingsService.getProject());
 	}
 
 	async getTeamMembers(projectName: string, teamName: string) {
