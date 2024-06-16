@@ -4,10 +4,7 @@ import { BoardService } from '../api/services/board.service';
 import { TeamFieldValue } from '../api/types/team-field-values.type';
 
 import { WorkItemService } from '../api/services/work-item.service';
-import {
-	AppSettingsService,
-	getIteration
-} from '../services/app-settings.service';
+import { AppSettingsService } from '../services/app-settings.service';
 import { BoardItem } from '../tree-items/board-item.class';
 import { ColumnItem } from '../tree-items/column-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
@@ -32,9 +29,7 @@ export class BoardsTreeProvider
 		this._onDidChangeTreeData.fire();
 	}
 
-	getTreeItem(
-		element: vscode.TreeItem,
-	) {
+	getTreeItem(element: vscode.TreeItem) {
 		return element;
 	}
 
@@ -79,7 +74,7 @@ export class BoardsTreeProvider
 	}
 
 	private async getWorkItems(element: ColumnItem) {
-		const iterationPath: string = getIteration();
+		const iterationPath: string = this._appSettingsService.getIteration();
 		const systemAreaPaths: TeamFieldValue[] = JSON.parse(
 			this._context.globalState.get('system-area-path') as string,
 		);

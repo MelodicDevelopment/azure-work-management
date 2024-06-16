@@ -1,8 +1,9 @@
 import { WebApi, getPersonalAccessTokenHandler } from 'azure-devops-node-api';
-import { getAppSettings, getOrganization } from './app-settings.service';
-const getBaseUrl = () => getAppSettings().get('serverUrl') as string;
-const getAuthHandler = () =>
-	getPersonalAccessTokenHandler(getAppSettings().get('personalAccessToken')!);
+import { AppSettingsService } from './app-settings.service';
 
-export const getWebApi = () =>
-	new WebApi(`${getBaseUrl()}${getOrganization()}`, getAuthHandler());
+export const getWebApi = (appSettingsService: AppSettingsService) => {
+	return new WebApi(
+		`${appSettingsService.getServerUrl()}${appSettingsService.getOrganization()}`,
+		getPersonalAccessTokenHandler(appSettingsService.getPersonalAccessToken()!),
+	);
+};

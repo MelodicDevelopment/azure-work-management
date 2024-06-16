@@ -29,7 +29,9 @@ export class WorkItemService {
 			query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = '${iterationPath}' AND (${systemAreaPath}) AND (${workItemType}) AND [System.BoardColumn] = '${boardColumn}' ORDER BY [State] Asc`,
 		};
 
-		const workItemTrackingApi = await getWebApi().getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi(
+			this._appSettingsService,
+		).getWorkItemTrackingApi();
 		const workItems = await workItemTrackingApi.queryByWiql(
 			{
 				query: data.query,
@@ -49,7 +51,9 @@ export class WorkItemService {
 			return [];
 		}
 
-		const workItemTrackingApi = await getWebApi().getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi(
+			this._appSettingsService,
+		).getWorkItemTrackingApi();
 		const chunks = chunk(ids, 200);
 
 		const result: WorkItem[] = [];
@@ -69,7 +73,9 @@ export class WorkItemService {
 		id: number,
 		changes: JsonPatchDocument,
 	): Promise<WorkItem> {
-		const workItemTrackingApi = await getWebApi().getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi(
+			this._appSettingsService,
+		).getWorkItemTrackingApi();
 		return await workItemTrackingApi.updateWorkItem({}, changes, id);
 	}
 }

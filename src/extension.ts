@@ -6,7 +6,10 @@ import { IterationService } from './api/services/iteration.service';
 import { TeamFieldValuesService } from './api/services/team-field-values.service';
 import { TeamService } from './api/services/team.service';
 import { WorkItemService } from './api/services/work-item.service';
-import { AppSettingsService, getAppSettings } from './services/app-settings.service';
+import {
+	AppSettingsService,
+	getAppSettings,
+} from './services/app-settings.service';
 import { WorkItemItem } from './tree-items';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
 import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
@@ -14,7 +17,10 @@ import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 export function activate(context: vscode.ExtensionContext) {
 	const appSettingsService = new AppSettingsService();
 	const workItemService = new WorkItemService(appSettingsService);
-	const backlogService = new BacklogService(appSettingsService, workItemService);
+	const backlogService = new BacklogService(
+		appSettingsService,
+		workItemService,
+	);
 	const boardService = new BoardService(appSettingsService);
 	const iterationService = new IterationService(appSettingsService);
 	const teamService = new TeamService(appSettingsService);
@@ -119,7 +125,10 @@ const setCurrentIteration = async (iterationService: IterationService) => {
 	}, 1000);
 };
 
-const setSystemAreaPaths = async (globalState: vscode.Memento, teamFieldValuesService: TeamFieldValuesService) => {
+const setSystemAreaPaths = async (
+	globalState: vscode.Memento,
+	teamFieldValuesService: TeamFieldValuesService,
+) => {
 	globalState.update('system-area-path', null);
 	const teamFields = await teamFieldValuesService.getTeamFieldValues();
 	globalState.update(

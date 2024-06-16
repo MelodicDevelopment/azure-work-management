@@ -6,7 +6,10 @@ import {
 import { WorkItemService } from './work-item.service';
 
 export class BacklogService {
-	constructor(private _appSettingsService: AppSettingsService, private _workItemService: WorkItemService) {}
+	constructor(
+		private _appSettingsService: AppSettingsService,
+		private _workItemService: WorkItemService,
+	) {}
 
 	protected get projectName(): string {
 		return encodeURI(getAppSettings().get('project') as string);
@@ -18,12 +21,12 @@ export class BacklogService {
 	protected apiVersion: string = 'api-version=6.1-preview.1';
 
 	async getBacklogs() {
-		const workApi = await getWebApi().getWorkApi();
+		const workApi = await getWebApi(this._appSettingsService).getWorkApi();
 		return workApi.getBacklogs(this._appSettingsService.getTeamContext());
 	}
 
 	async getBacklogWorkItems(backlogID: string) {
-		const workApi = await getWebApi().getWorkApi();
+		const workApi = await getWebApi(this._appSettingsService).getWorkApi();
 		const workItems = await workApi.getBacklogLevelWorkItems(
 			this._appSettingsService.getTeamContext(),
 			backlogID,

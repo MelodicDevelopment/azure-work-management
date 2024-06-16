@@ -5,7 +5,6 @@ import {
 } from '../../services/app-settings.service';
 
 export class BoardService {
-	
 	constructor(private _appSettingsService: AppSettingsService) {}
 	protected get projectName(): string {
 		return encodeURI(getAppSettings().get('project') as string);
@@ -15,13 +14,16 @@ export class BoardService {
 	}
 
 	async getAll() {
-		const workApi = await getWebApi().getWorkApi();
+		const workApi = await getWebApi(this._appSettingsService).getWorkApi();
 		return await workApi.getBoards(this._appSettingsService.getTeamContext());
 	}
 
 	async getColumns(boardID: string) {
-		const workApi = await getWebApi().getWorkApi();
-		const board = await workApi.getBoard(this._appSettingsService.getTeamContext(), boardID);
+		const workApi = await getWebApi(this._appSettingsService).getWorkApi();
+		const board = await workApi.getBoard(
+			this._appSettingsService.getTeamContext(),
+			boardID,
+		);
 		return board.columns!;
 	}
 }
