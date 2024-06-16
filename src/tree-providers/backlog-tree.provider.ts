@@ -7,15 +7,16 @@ import { WorkItemItem } from '../tree-items/work-item-item.class';
 export class BacklogTreeProvider
 	implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-	private _backlogService: BacklogService = new BacklogService();
-
 	private _onDidChangeTreeData: vscode.EventEmitter<
 		BacklogItem | undefined | void
 	> = new vscode.EventEmitter<BacklogItem | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<BacklogItem | undefined | void> =
 		this._onDidChangeTreeData.event;
 
-	constructor(private _context: vscode.ExtensionContext) {}
+	constructor(
+		private _context: vscode.ExtensionContext,
+		private _backlogService: BacklogService
+	) {}
 
 	refresh(): void {
 		this._onDidChangeTreeData.fire();

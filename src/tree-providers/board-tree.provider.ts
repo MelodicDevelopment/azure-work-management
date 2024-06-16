@@ -10,16 +10,17 @@ import { WorkItemItem } from '../tree-items/work-item-item.class';
 export class BoardsTreeProvider
 	implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-	private _boardService: BoardService = new BoardService();
-	private _workItemService: WorkItemService = new WorkItemService();
-
 	private _onDidChangeTreeData: vscode.EventEmitter<
 		BoardItem | undefined | void
 	> = new vscode.EventEmitter<BoardItem | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<BoardItem | undefined | void> =
 		this._onDidChangeTreeData.event;
 
-	constructor(private _context: vscode.ExtensionContext) {}
+	constructor(
+		private _context: vscode.ExtensionContext,
+		private _boardService: BoardService,
+		private _workItemService: WorkItemService,
+	) {}
 
 	refresh(): void {
 		this._onDidChangeTreeData.fire();
