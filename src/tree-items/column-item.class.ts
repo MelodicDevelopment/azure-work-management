@@ -1,7 +1,7 @@
 import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { BoardItem } from '../tree-items';
+import { BoardItem } from '../tree-items/board-item.class';
 
 export class ColumnItem extends vscode.TreeItem {
 	contextValue = 'column';

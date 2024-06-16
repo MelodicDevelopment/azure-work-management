@@ -1,15 +1,37 @@
 import * as vscode from 'vscode';
 import { chooseAction } from './actions/work-item-edit.actions';
-import { IterationService, TeamFieldValuesService } from './api/services';
-import { getAppSettings } from './services';
-import { WorkItemItem } from './tree-items';
+import { BacklogService } from './api/services/backlog.service';
+import { BoardService } from './api/services/board.service';
+import { IterationService } from './api/services/iteration.service';
+import { TeamFieldValuesService } from './api/services/team-field-values.service';
+import { TeamService } from './api/services/team.service';
+import { WorkItemService } from './api/services/work-item.service';
+import { AppSettingsService } from './services/app-settings.service';
+import { WorkItemItem } from './tree-items/work-item-item.class';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
 import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 
 export function activate(context: vscode.ExtensionContext) {
-	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(context);
+	const appSettingsService = new AppSettingsService();
+	const workItemService = new WorkItemService(appSettingsService);
+	const backlogService = new BacklogService(
+		appSettingsService,
+		workItemService,
+	);
+	const boardService = new BoardService(appSettingsService);
+	const iterationService = new IterationService(appSettingsService);
+	const teamService = new TeamService(appSettingsService);
+	const teamFieldValuesService = new TeamFieldValuesService(appSettingsService);
+	const boardTreeProvider: BoardsTreeProvider = new BoardsTreeProvider(
+		context,
+		appSettingsService,
+		boardService,
+		workItemService,
+	);
 	const backlogTreeProvider: BacklogTreeProvider = new BacklogTreeProvider(
 		context,
+		appSettingsService,
+		backlogService,
 	);
 
 	vscode.window.registerTreeDataProvider(
@@ -42,8 +64,8 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand(
 		'azure-work-management.set-iteration',
 		async () => {
-			await setSystemAreaPaths(context.globalState);
-			setCurrentIteration();
+			await setSystemAreaPaths(context.globalState, teamFieldValuesService);
+			setCurrentIteration(appSettingsService, iterationService);
 		},
 	);
 
@@ -51,14 +73,12 @@ export function activate(context: vscode.ExtensionContext) {
 		'azure-work-management.open-work-item',
 		(workItem: WorkItemItem) => {
 			const organizationName: string = encodeURI(
-				getAppSettings().get('organization') as string,
+				appSettingsService.getOrganization(),
 			);
-			const projectName: string = encodeURI(
-				getAppSettings().get('project') as string,
-			);
+			const projectName: string = encodeURI(appSettingsService.getProject());
 			vscode.env.openExternal(
 				vscode.Uri.parse(
-					`${getAppSettings().get('serverUrl')}${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`,
+					`${appSettingsService.getServerUrl()}${organizationName}/${projectName}/_workitems/edit/${workItem.getWorkItemID()}`,
 				),
 			);
 		},
@@ -67,13 +87,19 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand(
 		'azure-work-management.edit-work-item',
 		(workItem: WorkItemItem) => {
-			chooseAction(workItem);
+			chooseAction(workItem, {
+				appSettingsService,
+				workItemService,
+				teamService,
+			});
 		},
 	);
 }
 
-const setCurrentIteration = async () => {
-	const iterationService: IterationService = new IterationService();
+const setCurrentIteration = async (
+	appSettingsService: AppSettingsService,
+	iterationService: IterationService,
+) => {
 	const iterationsRaw = await iterationService.getIterations();
 
 	const iterationTimeframes = {
@@ -93,7 +119,9 @@ const setCurrentIteration = async () => {
 	});
 
 	if (result) {
-		getAppSettings().update('iteration', result.data.path, true);
+		appSettingsService
+			.getAppSettings()
+			.update('iteration', result.data.path, true);
 	}
 
 	setTimeout(() => {
@@ -101,10 +129,11 @@ const setCurrentIteration = async () => {
 	}, 1000);
 };
 
-const setSystemAreaPaths = async (globalState: vscode.Memento) => {
+const setSystemAreaPaths = async (
+	globalState: vscode.Memento,
+	teamFieldValuesService: TeamFieldValuesService,
+) => {
 	globalState.update('system-area-path', null);
-	const teamFieldValuesService: TeamFieldValuesService =
-		new TeamFieldValuesService();
 	const teamFields = await teamFieldValuesService.getTeamFieldValues();
 	globalState.update(
 		'system-area-path',

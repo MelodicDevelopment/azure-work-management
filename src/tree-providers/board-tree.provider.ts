@@ -1,8 +1,10 @@
 import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as vscode from 'vscode';
-import { TeamFieldValue } from '../api';
-import { BoardService, WorkItemService } from '../api/services';
-import { getAppSettings, isValidAppSettings } from '../services';
+import { BoardService } from '../api/services/board.service';
+import { TeamFieldValue } from '../api/types/team-field-values.type';
+
+import { WorkItemService } from '../api/services/work-item.service';
+import { AppSettingsService } from '../services/app-settings.service';
 import { BoardItem } from '../tree-items/board-item.class';
 import { ColumnItem } from '../tree-items/column-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
@@ -10,31 +12,31 @@ import { WorkItemItem } from '../tree-items/work-item-item.class';
 export class BoardsTreeProvider
 	implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-	private _boardService: BoardService = new BoardService();
-	private _workItemService: WorkItemService = new WorkItemService();
-
 	private _onDidChangeTreeData: vscode.EventEmitter<
 		BoardItem | undefined | void
 	> = new vscode.EventEmitter<BoardItem | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<BoardItem | undefined | void> =
 		this._onDidChangeTreeData.event;
 
-	constructor(private _context: vscode.ExtensionContext) {}
+	constructor(
+		private _context: vscode.ExtensionContext,
+		private _appSettingsService: AppSettingsService,
+		private _boardService: BoardService,
+		private _workItemService: WorkItemService,
+	) {}
 
 	refresh(): void {
 		this._onDidChangeTreeData.fire();
 	}
 
-	getTreeItem(
-		element: vscode.TreeItem,
-	): vscode.TreeItem | Thenable<vscode.TreeItem> {
+	getTreeItem(element: vscode.TreeItem) {
 		return element;
 	}
 
 	getChildren(
 		element?: vscode.TreeItem,
 	): vscode.ProviderResult<vscode.TreeItem[]> {
-		if (isValidAppSettings()) {
+		if (this._appSettingsService.isValidAppSettings()) {
 			const contextValueGetters: {
 				[key: string]: () => Promise<vscode.TreeItem[]>;
 			} = {
@@ -72,7 +74,7 @@ export class BoardsTreeProvider
 	}
 
 	private async getWorkItems(element: ColumnItem) {
-		const iterationPath: string = getAppSettings().get('iteration') as string;
+		const iterationPath: string = this._appSettingsService.getIteration();
 		const systemAreaPaths: TeamFieldValue[] = JSON.parse(
 			this._context.globalState.get('system-area-path') as string,
 		);

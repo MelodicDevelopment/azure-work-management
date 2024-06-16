@@ -1,21 +1,23 @@
 import * as vscode from 'vscode';
-import { BacklogService } from '../api';
-import { isValidAppSettings } from '../services';
+import { BacklogService } from '../api/services/backlog.service';
+import { AppSettingsService } from '../services/app-settings.service';
 import { BacklogItem } from '../tree-items/backlog-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
 
 export class BacklogTreeProvider
 	implements vscode.TreeDataProvider<vscode.TreeItem>
 {
-	private _backlogService: BacklogService = new BacklogService();
-
 	private _onDidChangeTreeData: vscode.EventEmitter<
 		BacklogItem | undefined | void
 	> = new vscode.EventEmitter<BacklogItem | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<BacklogItem | undefined | void> =
 		this._onDidChangeTreeData.event;
 
-	constructor(private _context: vscode.ExtensionContext) {}
+	constructor(
+		private _context: vscode.ExtensionContext,
+		private _appSettingsService: AppSettingsService,
+		private _backlogService: BacklogService,
+	) {}
 
 	refresh(): void {
 		this._onDidChangeTreeData.fire();
@@ -30,7 +32,7 @@ export class BacklogTreeProvider
 	getChildren(
 		element?: vscode.TreeItem,
 	): vscode.ProviderResult<vscode.TreeItem[]> {
-		if (isValidAppSettings()) {
+		if (this._appSettingsService.isValidAppSettings()) {
 			const contextValueGetters: {
 				[key: string]: () => Promise<vscode.TreeItem[]>;
 			} = {

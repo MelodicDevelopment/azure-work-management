@@ -183,11 +183,12 @@
 		"watch": "webpack --watch",
 		"package": "webpack --mode production --devtool hidden-source-map",
 		"test-compile": "tsc -p ./",
+		"test-coverage": "vscode-test --coverage",
 		"test-watch": "tsc -watch -p ./",
 		"pretest": "npm run test-compile && npm run lint",
 		"lint": "eslint src --ext ts",
 		"fix": "eslint --fix --ext .ts -f stylish . && prettier --write .",
-		"test": "node ./out/test/runTest.js"
+		"test": "vscode-test"
 	},
 	"devDependencies": {
 		"@types/glob": "^8.1.0",
@@ -197,13 +198,14 @@
 		"@types/vscode": "^1.85.0",
 		"@typescript-eslint/eslint-plugin": "^6.19.0",
 		"@typescript-eslint/parser": "^6.19.0",
+		"@vscode/test-cli": "^0.0.9",
+		"@vscode/test-electron": "^2.4.0",
 		"eslint": "^8.56.0",
 		"glob": "^7.1.7",
 		"mocha": "^10.2.0",
 		"prettier": "3.2.5",
 		"ts-loader": "^9.5.1",
 		"typescript": "^5.3.3",
-		"vscode-test": "^1.6.1",
 		"webpack": "^5.89.0",
 		"webpack-cli": "^5.1.4"
 	},

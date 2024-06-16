@@ -1,11 +1,14 @@
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 import { JsonPatchDocument } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import { chunk } from 'lodash';
-import { getTeamContext } from '../../services';
-import { ApiBase } from '../api-base.class';
-import { TeamFieldValue } from '../types';
+import { AppSettingsService } from '../../services/app-settings.service';
 
-export class WorkItemService extends ApiBase {
+import { getWebApi } from '../../services/api.service';
+import { TeamFieldValue } from '../types/team-field-values.type';
+
+export class WorkItemService {
+	constructor(private _appSettingsService: AppSettingsService) {}
+
 	async queryForWorkItems(
 		iterationPath: string,
 		areaPath: TeamFieldValue[],
@@ -26,12 +29,14 @@ export class WorkItemService extends ApiBase {
 			query: `SELECT [System.State], [System.Title] FROM WorkItems WHERE [System.IterationPath] = '${iterationPath}' AND (${systemAreaPath}) AND (${workItemType}) AND [System.BoardColumn] = '${boardColumn}' ORDER BY [State] Asc`,
 		};
 
-		const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi(
+			this._appSettingsService,
+		).getWorkItemTrackingApi();
 		const workItems = await workItemTrackingApi.queryByWiql(
 			{
 				query: data.query,
 			},
-			getTeamContext(),
+			this._appSettingsService.getTeamContext(),
 		);
 
 		const ids =
@@ -46,7 +51,9 @@ export class WorkItemService extends ApiBase {
 			return [];
 		}
 
-		const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi(
+			this._appSettingsService,
+		).getWorkItemTrackingApi();
 		const chunks = chunk(ids, 200);
 
 		const result: WorkItem[] = [];
@@ -66,7 +73,9 @@ export class WorkItemService extends ApiBase {
 		id: number,
 		changes: JsonPatchDocument,
 	): Promise<WorkItem> {
-		const workItemTrackingApi = await this.webApi.getWorkItemTrackingApi();
+		const workItemTrackingApi = await getWebApi(
+			this._appSettingsService,
+		).getWorkItemTrackingApi();
 		return await workItemTrackingApi.updateWorkItem({}, changes, id);
 	}
 }

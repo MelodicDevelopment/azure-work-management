@@ -1,22 +1,19 @@
-import { getAppSettings, getTeamContext } from '../../services';
-import { ApiBase } from '../api-base.class';
+import { getWebApi } from '../../services/api.service';
+import { AppSettingsService } from '../../services/app-settings.service';
 
-export class BoardService extends ApiBase {
-	protected get projectName(): string {
-		return encodeURI(getAppSettings().get('project') as string);
-	}
-	protected get teamName(): string {
-		return encodeURI(getAppSettings().get('team') as string);
-	}
-
+export class BoardService {
+	constructor(private _appSettingsService: AppSettingsService) {}
 	async getAll() {
-		const workApi = await this.webApi.getWorkApi();
-		return await workApi.getBoards(getTeamContext());
+		const workApi = await getWebApi(this._appSettingsService).getWorkApi();
+		return await workApi.getBoards(this._appSettingsService.getTeamContext());
 	}
 
 	async getColumns(boardID: string) {
-		const workApi = await this.webApi.getWorkApi();
-		const board = await workApi.getBoard(getTeamContext(), boardID);
+		const workApi = await getWebApi(this._appSettingsService).getWorkApi();
+		const board = await workApi.getBoard(
+			this._appSettingsService.getTeamContext(),
+			boardID,
+		);
 		return board.columns!;
 	}
 }
