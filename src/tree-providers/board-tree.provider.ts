@@ -7,7 +7,11 @@ import { BoardItem } from '../tree-items/board-item.class';
 import { ColumnItem } from '../tree-items/column-item.class';
 import { WorkItemItem } from '../tree-items/work-item-item.class';
 import { WorkItemService } from '../api/services/work-item.service';
-import { getAppSettings, getIteration, isValidAppSettings } from '../services/app-settings.service';
+import {
+	getAppSettings,
+	getIteration,
+	isValidAppSettings,
+} from '../services/app-settings.service';
 
 export class BoardsTreeProvider
 	implements vscode.TreeDataProvider<vscode.TreeItem>

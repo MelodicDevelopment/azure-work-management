@@ -1,6 +1,8 @@
 import { getWebApi } from '../../services/api.service';
-import { getAppSettings, getTeamContext } from '../../services/app-settings.service';
-
+import {
+	getAppSettings,
+	getTeamContext,
+} from '../../services/app-settings.service';
 
 export class BoardService {
 	protected get projectName(): string {

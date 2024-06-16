@@ -1,9 +1,12 @@
 import { getWebApi } from '../../services/api.service';
-import { getAppSettings, getTeamContext } from '../../services/app-settings.service';
+import {
+	getAppSettings,
+	getTeamContext,
+} from '../../services/app-settings.service';
 import { WorkItemService } from './work-item.service';
 
 export class BacklogService {
-	private _workItemService: WorkItemService = new WorkItemService();
+	constructor(private _workItemService: WorkItemService) {}
 
 	protected get projectName(): string {
 		return encodeURI(getAppSettings().get('project') as string);

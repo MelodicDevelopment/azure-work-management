@@ -1,6 +1,5 @@
 import { getWebApi } from '../../services/api.service';
 
-
 export class ProjectService {
 	async getProjects() {
 		const coreApi = await getWebApi().getCoreApi();
