@@ -1,7 +1,7 @@
 import { BoardColumn } from 'azure-devops-node-api/interfaces/WorkInterfaces';
 import * as vscode from 'vscode';
 import { TeamService } from '../api/services/team.service';
-import { WorkItemItem } from '../tree-items';
+import { WorkItemItem } from '../tree-items/work-item-item.class';
 import { WorkItemService } from '../api/services/work-item.service';
 import { AppSettingsService } from '../services/app-settings.service';
 

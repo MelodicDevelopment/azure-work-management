@@ -4,7 +4,7 @@ import { chunk } from 'lodash';
 import { AppSettingsService } from '../../services/app-settings.service';
 
 import { getWebApi } from '../../services/api.service';
-import { TeamFieldValue } from '../types';
+import { TeamFieldValue } from '../types/team-field-values.type';
 
 export class WorkItemService {
 	constructor(private _appSettingsService: AppSettingsService) {}

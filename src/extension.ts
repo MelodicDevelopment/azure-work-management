@@ -7,7 +7,7 @@ import { TeamFieldValuesService } from './api/services/team-field-values.service
 import { TeamService } from './api/services/team.service';
 import { WorkItemService } from './api/services/work-item.service';
 import { AppSettingsService } from './services/app-settings.service';
-import { WorkItemItem } from './tree-items';
+import { WorkItemItem } from './tree-items/work-item-item.class';
 import { BacklogTreeProvider } from './tree-providers/backlog-tree.provider';
 import { BoardsTreeProvider } from './tree-providers/board-tree.provider';
 

@@ -5,7 +5,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { BoardService } from '../../../api/services/board.service';
 import { WorkItemService } from '../../../api/services/work-item.service';
-import { BoardsTreeProvider } from '../../../tree-providers';
+import { BoardsTreeProvider } from '../../../tree-providers/board-tree.provider';
 import { AppSettingsService } from '../../../services/app-settings.service';
 
 suite('BoardTreeProvider', () => {
